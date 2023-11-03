@@ -1,0 +1,52 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load i18n %}
+{% block full_title %}{{ PROJECT_NAME }}{% endblock full_title %}
+{% block content %}
+<section class="page page--wide">
+    {% include "includes/messages.html" %}
+    <h1>
+        {{ PROJECT_NAME }}
+    </h1>
+    <h3>
+        Query the Portability Map
+    </h3>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">{% translate "Submit" %}</button>
+    </form>
+
+    <h3>
+        Pages
+    </h3>
+    <table>
+        <thead>
+            <tr>
+                <td>Page</td><td>Detail</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="/dj-admin/">dj-admin</a></td><td>Django admin</td>
+            </tr>
+            <tr>
+                <td><a href="/accounts/signup/">accounts/signup</a></td><td>Sign up page</td>
+            </tr>
+            <tr>
+                <td><a href="/accounts/login/">accounts/login</a></td><td>Sign in page</td>
+            </tr>
+            <tr>
+                <td><a href="/accounts/password/reset">accounts/password/reset</a></td><td>Reset password</td>
+            </tr>
+            <tr>
+                <td><a href="/accounts/settings/">settings</a></td><td>Settings page</td>
+            </tr>
+            <tr>
+                <td><a href="/silk/">silk</a></td><td>Silk profiling tool</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+{% endblock content %}
