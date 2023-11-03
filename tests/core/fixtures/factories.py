@@ -5,7 +5,7 @@ from rest_framework.authtoken.models import Token
 
 from portmap.core.models import User
 
-from .defaults import DEFAULT_PASSWORD
+from tests.core.fixtures.defaults import DEFAULT_PASSWORD
 
 
 @register

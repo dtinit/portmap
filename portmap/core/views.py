@@ -9,7 +9,7 @@ from django.utils.translation import gettext as _
 
 from .forms import UpdateAccountForm
 from .models import User
-from .articles import get_article
+from .articles import get_article, get_content_files
 
 def index(request):
     return TemplateResponse(request, "core/index.html", {})
@@ -60,6 +60,16 @@ def login_as_user(request):
     messages.success(request, _("Successfully signed in as ") + str(as_user))
     return redirect("index")
 
-def article_display(request, article_name):
+def display_article(request, article_name):
     article_content = get_article(article_name)
+    # LMDTODO here is where we start to plug in the templating into HTML
     return HttpResponse(article_content)
+
+def debug_list_articles(request):
+    if not settings.DEBUG:
+        raise Http404
+
+    return HttpResponse(get_content_files())
+
+def debug_help_dev(request):
+    return HttpResponse("TODO: Put links to debug stuff here like article listing")
