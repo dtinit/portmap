@@ -33,6 +33,6 @@ if settings.DEBUG:
             {"document_root": settings.MEDIA_ROOT, "show_indexes": True},
         ),
         path("login-as-user/", views.login_as_user, name="login_as_user"),
-        #path("__dev__/", views.debug_help_dev, name="debug_help_dev"),
-        #path("__dev__/list_articles/", views.debug_list_articles, name="debug_list_articles")
+        path("__dev__/", views.debug_help_dev, name="debug_help_dev"),
+        path("__dev__/list_articles/", views.debug_list_articles, name="debug_list_articles")
     ] + urlpatterns

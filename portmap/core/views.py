@@ -7,13 +7,15 @@ from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 
-from .forms import UpdateAccountForm
+from .forms import UpdateAccountForm, QueryIndexForm
 from .models import User
 from .articles import get_article, get_content_files
 
 def index(request):
-    return TemplateResponse(request, "core/index.html", {})
-
+    articles = get_content_files()
+    datatypes = set([article['datatype'] for article in articles])
+    form = QueryIndexForm(datatypes=datatypes)
+    return TemplateResponse(request, "core/index.html", {'form': form, 'datatypes':datatypes})
 
 @login_required
 def user_settings(request):
@@ -68,8 +70,8 @@ def display_article(request, article_name):
 def debug_list_articles(request):
     if not settings.DEBUG:
         raise Http404
-
-    return HttpResponse(get_content_files())
+    articles = get_content_files()
+    return TemplateResponse(request, "core/debug_article_list.html", {"articles": articles})
 
 def debug_help_dev(request):
-    return HttpResponse("TODO: Put links to debug stuff here like article listing")
+    return TemplateResponse(request, "core/debug_index.html")
