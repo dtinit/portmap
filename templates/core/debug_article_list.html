@@ -4,20 +4,25 @@
 {% block full_title %}{{ PROJECT_NAME }}{% endblock full_title %}
 {% block content %}
 <section class="page page--wide">
-    {% include "includes/messages.html" %}
-    <table>
-   <tr>
-       <th>Article</th>
-       <th>Title</th>
-       <th>Content type</th>
-   </tr>
-   {% for item in articles %}
-       <tr>
-           <td>{{item.Article}}</td>
-           <td>{{item.title}}</td>
-           <td>{{item.datatype }}</td>
-       </tr>
-   {% endfor %}
+{% include "includes/messages.html" %}
+<table>
+    <tr>
+        <th>Article</th>
+        <th>Title</th>
+        <th>Content type</th>
+    </tr>
+    {% for item in articles %}
+        <tr>
+            <td>{{item.name}}</td>
+            <td>{{item.title}}</td>
+            <td>{{item.datatype }}</td>
+            <td>{{ item.source_list }}</td>
+            <td>{{ item.destination_list }}</td>
+        </tr>
+    {% endfor %}
 </table>
+
+<a href="?populate=yesplease">Populate?</a>
+
 </section>
 {% endblock content %}

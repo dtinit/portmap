@@ -4,7 +4,7 @@ project_user: lisa
 app_name: portmap
 domain_name: X.X.X.X
 db_name: portmap
-git_url: git@github.com:lmdtodo/portmap.git
+git_url: git@github.com:dtinit/portmap.git
 git_key_file: /path/to/.ssh/id_rsa
 django_secret_key: djangosecretkey
 django_ssl: 0

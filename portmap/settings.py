@@ -360,4 +360,6 @@ if DEBUG:
     snoop.install()
 
 # Actual portmap app settings
-GITHUB_APP_TOKEN = env.str("GITHUB_APP_TOKEN")
+GITHUB_PRIVATE_KEY_PEM_FILE = env.str("GITHUB_PRIVATE_KEY_PEM_FILE", None)
+GITHUB_PRIVATE_KEY = env.str("GITHUB_PRIVATE_KEY", None)  # Can set this instead of PEM file location
+GITHUB_APP_ID = 425789

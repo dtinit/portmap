@@ -17,7 +17,7 @@ def has_yaml_header(file_content):
 def extract_yaml_and_body(file_content):
     """ Extracts a YAML header delimited by lines consisting of '---' from the rest of a markdown document
     >>> extract_yaml_and_body("---\\nTest: Data\\nPart: Deux\\n---\\nSeparate this body part\\n")
-    ('Test: Data\\nPart: Deux', 'Separate this body part\\n')
+    ({'Test': 'Data', 'Part': 'Deux'}, 'Separate this body part\\n')
     """
     assert has_yaml_header(file_content)
     in_yaml_header = False
