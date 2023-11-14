@@ -19,7 +19,7 @@ class CustomUserCreationForm(UserCreationForm):
         fields = ("email", "username")
 
 
-class CustomUserChangeForm(UserChangeForm)
+class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = User
         fields = ("email", "username")
@@ -36,6 +36,6 @@ class QueryIndexForm(forms.Form):
     content_type_choices = (('error', 'data missing'))
     content_type = forms.ChoiceField(label="Content Type", choices=content_type_choices)
 
-    def __init__(self, datatypes):
-        super().__init__()
+    def __init__(self, data, datatypes=None):
+        super().__init__(data=data)
         self.fields['content_type'].choices = [(item, item) for item in datatypes]

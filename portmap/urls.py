@@ -15,7 +15,7 @@ urlpatterns = [
     path("accounts/delete-account/", views.delete_account, name="delete_account"),
     # articles
     path("articles/<article_name>/", views.display_article, name="display_article"),
-
+    path("find_articles", views.find_articles, name="find_articles"),
     # core
     path("", views.index, name="index"),
 ]

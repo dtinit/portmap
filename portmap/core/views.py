@@ -14,7 +14,7 @@ from .articles import get_article, get_content_files
 def index(request):
     articles = get_content_files()
     datatypes = set([article['datatype'] for article in articles])
-    form = QueryIndexForm(datatypes=datatypes)
+    form = QueryIndexForm(data=None, datatypes=datatypes)
     return TemplateResponse(request, "core/index.html", {'form': form, 'datatypes':datatypes})
 
 @login_required
@@ -66,6 +66,21 @@ def display_article(request, article_name):
     article_content = get_article(article_name)
     # LMDTODO here is where we start to plug in the templating into HTML
     return HttpResponse(article_content)
+
+def find_articles(request):
+    articles = get_content_files()
+    datatypes = set([article['datatype'] for article in articles])
+    if request.method == "POST":
+        # create a form instance and populate it with data from the request:
+        form = QueryIndexForm(data=request.POST, datatypes=datatypes)
+        if form.is_valid():
+            possible_articles = [article for article in articles if form.data['content_type'] in article['datatype']]
+            return TemplateResponse(request, "core/article_list.html", {'articles': possible_articles})
+
+    else:
+        form = QueryIndexForm(data=None, datatypes=datatypes)
+
+    return TemplateResponse(request, "core/index.html", {'form': form, 'datatypes':datatypes})
 
 def debug_list_articles(request):
     if not settings.DEBUG:

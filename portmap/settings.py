@@ -360,5 +360,4 @@ if DEBUG:
     snoop.install()
 
 # Actual portmap app settings
-GITHUB_APP_ACCOUNT_ID = env.str("GITHUB_APP_ACCOUNT_ID")
-GITHUB_APP_ACCOUNT_SECRET = env.str("GITHUB_APP_ACCOUNT_SECRET")
+GITHUB_APP_TOKEN = env.str("GITHUB_APP_TOKEN")

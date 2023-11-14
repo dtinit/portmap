@@ -12,7 +12,7 @@
         Query the Portability Map
     </h3>
 
-    <form method="post">
+    <form method="post" action="find_articles">
         {% csrf_token %}
         {{ form }}
         <button type="submit">{% translate "Submit" %}</button>

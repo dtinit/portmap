@@ -4,14 +4,16 @@ from portmap.utils import extract_yaml_and_body
 from django.conf import settings
 
 REPOSITORY_URL = "https://api.github.com/repos/dtinit/portability-articles"
+HEADERS = {"Authorization": f"Bearer {settings.GITHUB_APP_TOKEN}"}
+# LMDTODO: This will have to change soon and rather than get an App token from the environment,
+# request one using a JWT that has just been created using the private key.
 
 def get_content_files():
-    auth = (settings.GITHUB_APP_ACCOUNT_ID, settings.GITHUB_APP_ACCOUNT_SECRET)
-    articles_response = requests.get(f"{REPOSITORY_URL}/contents/articles", auth=auth)
-    if articles_response.status_code != 200:
-        raise Exception(f"Github API responded {articles_response.status_code}, {articles_response.content}")
+    response = requests.get(f"{REPOSITORY_URL}/contents/articles", headers=HEADERS)
+    if response.status_code != 200:
+        raise Exception(f"Github API responded {response.status_code}, {response.content} to {response.request.url}")
     debug_articles_info = []
-    for article_item in articles_response.json():
+    for article_item in response.json():
         article_content = get_article(article_item['name'])
         yaml_header, body = extract_yaml_and_body(article_content)
         article_dict = {**yaml_header,  "Article": article_item['name'],  "Body": body}
@@ -20,7 +22,7 @@ def get_content_files():
     return debug_articles_info
 
 def get_article(name):
-    article = requests.get(f"{REPOSITORY_URL}/contents/articles/{name}", auth=(USER, PASSWORD))
+    article = requests.get(f"{REPOSITORY_URL}/contents/articles/{name}", headers=HEADERS)
     article_data = article.json()
     return base64.b64decode(bytearray(article_data["content"], "utf-8")).decode('utf-8')
 
