@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model
+from collections import defaultdict
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -29,6 +29,16 @@ class Article(BaseModel):
     @classmethod
     def datatypes(cls):
         return Article.objects.order_by("datatype").distinct("datatype")
+
+    @classmethod
+    def get_query_structure(cls):
+        structure = defaultdict(lambda: defaultdict(list))
+        for article in Article.objects.all():
+            datatype = article.datatype
+            for source in article.source_list():
+                for dest in article.destination_list():
+                    structure[datatype][source].append(dest)
+        return structure
 
     def save(self, *args, **kwargs):
         self.full_clean()

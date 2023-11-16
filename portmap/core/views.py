@@ -1,3 +1,5 @@
+import json
+import markdown
 from allauth.account.views import LoginView as AllAuthLoginView
 from django.conf import settings
 from django.contrib import messages
@@ -13,9 +15,12 @@ from .articles import get_content_files
 
 
 def index(request):
-    datatypes = Article.datatypes()
-    form = QueryIndexForm(data=None, datatypes=datatypes)
-    return TemplateResponse(request, "core/index.html", {'form': form, 'datatypes':datatypes})
+    query_structure = Article.get_query_structure()
+    form = QueryIndexForm(data=None, datatypes=query_structure.keys())
+    return TemplateResponse(request,
+                            "core/index.html",
+                            {'form': form, 'query_structure': json.dumps(query_structure)})
+
 
 @login_required
 def user_settings(request):
@@ -62,10 +67,12 @@ def login_as_user(request):
     messages.success(request, _("Successfully signed in as ") + str(as_user))
     return redirect("index")
 
+
 def display_article(request, article_name):
-    article_content = get_article(article_name)
-    # LMDTODO here is where we start to plug in the templating into HTML
-    return HttpResponse(article_content)
+    article_content = Article.objects.get(name=article_name).body
+    html = markdown.markdown(article_content)
+
+    return HttpResponse(html)
 
 
 def find_articles(request):
@@ -73,14 +80,18 @@ def find_articles(request):
     if request.method == "POST":
         # create a form instance and populate it with data from the request:
         form = QueryIndexForm(data=request.POST, datatypes=datatypes)
-        if form.is_valid():
-            possible_articles = [article for article in Article.objects.all() if form.data['content_type'] in article.datatype]
-            return TemplateResponse(request, "core/article_list.html", {'articles': possible_articles})
+        if form['datatype']:
+            possible_articles = Article.objects.filter(datatype__contains=form.data['datatype'],
+                                                       sources__contains=form.data['datasource'],
+                                                       destinations__contains=form.data['datadest'])
+            if possible_articles.count() == 1:
+                return redirect(f"/articles/{possible_articles[0].name}", )
+            else:
+                return TemplateResponse(request, "core/article_list.html", {'articles': possible_articles})
 
     else:
         form = QueryIndexForm(data=None, datatypes=datatypes)
-
-    return TemplateResponse(request, "core/index.html", {'form': form, 'datatypes':datatypes})
+        return TemplateResponse(request, "core/index.html", {'form': form, 'datatypes': datatypes})
 
 
 def debug_list_articles(request):

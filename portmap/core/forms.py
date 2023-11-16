@@ -33,9 +33,13 @@ class UpdateAccountForm(forms.ModelForm):
         fields = ("first_name", "last_name")
 
 class QueryIndexForm(forms.Form):
-    content_type_choices = (('error', 'data missing'))
-    content_type = forms.ChoiceField(label="Content Type", choices=content_type_choices)
+    data_type_choices = (('error', 'data missing'))
+    datatype = forms.ChoiceField(label="Data/Content Type", choices=data_type_choices)
+    datasource = forms.ChoiceField(label="Where the data is currently", choices=(()))
+    datadest = forms.ChoiceField(label="Destination", choices=(()))
 
     def __init__(self, data, datatypes=None):
         super().__init__(data=data)
-        self.fields['content_type'].choices = [(item, item) for item in datatypes]
+        self.fields['datatype'].choices = [("", "Select an option")] + [(item, item) for item in datatypes]
+        self.fields['datasource'].disabled = True
+        self.fields['datadest'].disabled = True
