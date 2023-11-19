@@ -6,10 +6,6 @@ import structlog
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-with open('.env') as env_file:
-    for line in env_file:
-        print(f"ENV: {line}")
-
 env = environ.Env()
 env.read_env(os.path.join(BASE_DIR, ".env"))
 
@@ -36,12 +32,6 @@ INSTALLED_APPS = [
     "django_extensions",
     "allauth",
     "allauth.account",
-    "rest_framework",
-    "rest_framework.authtoken",
-    "drf_spectacular",
-    "drf_spectacular_sidecar",
-    "drf_standardized_errors",
-    "corsheaders",
     "django_htmx",
     "huey.contrib.djhuey",
     "portmap.core",
@@ -55,7 +45,6 @@ if DEBUG:
     ]
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

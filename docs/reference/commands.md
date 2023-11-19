@@ -32,7 +32,6 @@ Some useful commands:
 * `./manage.py generate_secret_key` - Generates Django secret key (useful when needing one for production)
 * `./manage.py admin_generator <appname>` - Generates the contents of admin.py for a given Django app
 * `./manage.py describe_form <appname.ModelName>` - Generates Django form based on a model
-* `./manage.py drf_create_token <username>` - Generates an API token for a given user
 * `./manage.py makemessages --locale=<locale>` (or `--all`) - Creates or updates messages files for translations
 * `./manage.py compilemessages` - Compiles .po files created by makemessages to .mo files
 * `./manage.py clear_cache` - Clears Django cache

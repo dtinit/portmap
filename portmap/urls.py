@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.static import serve
 
-from .core import api, views
+from .core import views
 
 urlpatterns = [
     # admin
