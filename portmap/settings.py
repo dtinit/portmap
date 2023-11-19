@@ -6,6 +6,10 @@ import structlog
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+with open('.env') as env_file:
+    for line in env_file:
+        print(f"ENV: {line}")
+
 env = environ.Env()
 env.read_env(os.path.join(BASE_DIR, ".env"))
 
