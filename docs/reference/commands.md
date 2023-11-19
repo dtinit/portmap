@@ -16,7 +16,6 @@ Some useful commands:
 * `./manage.py sqlmigrate <appname> <migrationfilename>` - Examines a migration file by showing what the generated SQL looks like
 * `./manage.py sh` - Starts enhanced Python shell with auto-imported models and Django context (IPython is default)
 * `./manage.py dbshell` - Starts db shell (like PostgreSQL's psql)
-* `./manage.py run_huey` - Starts Huey consumers (this way you can test huey consumers using Redis locally)
 * `./manage.py print_settings` - Prints all Django settings
 * `./manage.py diffsettings` - See all Django settings that differ from Django's defaults
 * `./manage.py show_urls` - Shows all urlpatterns

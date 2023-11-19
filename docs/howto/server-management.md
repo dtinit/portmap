@@ -9,7 +9,7 @@ There are some neat commands in the provided `deployment/ansible/Makefile` that 
 - `make provision` - Provisions a VPS from scratch (use `APP_VERSION` env var for a specific version)
 - `make deploy` - Deploys a new application version (use `APP_VERSION` env var for a specific version)
 - `make login` - Gives you a remote SSH shell to your server
-- `make status` - Gives you status of all important services running (application, database, Redis, queue, webserver)
+- `make status` - Gives you status of all important services running (application, database, queue, webserver)
 - `make appservicelog` - Prints the last application service logs
 - `make queueservicelog`- Prints the last queue service logs
 - `make webserverservicelog`- Prints the last web server service logs
