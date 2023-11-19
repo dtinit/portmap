@@ -17,7 +17,6 @@ which sets us up with:
 * Use HTMX for modern frontends
 * Use django-allauth to provide email-based and 3rd party authentication.
 * Have a custom User model for ultimate flexibility
-* Have a Huey task queue for background and periodic tasks
 * auto reloading, debugging and profiling tools, linters and formatters
 * Log anything you want with structured logging
 * Execute automated tests using the best testing library pytest

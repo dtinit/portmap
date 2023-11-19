@@ -301,7 +301,7 @@
           User={{ project_user }}
           Group=caddy
           WorkingDirectory=/srv/{{ app_name }}
-          ExecStart=/usr/local/bin/poetry run ./manage.py run_huey -w 2
+          ExecStart=/usr/local/bin/poetry run ./manage.py -w 2
           Restart=always
 
           [Install]

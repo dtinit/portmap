@@ -22,10 +22,6 @@ This project is based on Sidewinder project template, modifying here as I diverg
 - Basic one-file CSS is included to style authentication-related and example pages
 - Configured [htmx](https://htmx.org/) for smoother frontend interactions
 
-### Task queue
-
-- [huey](https://github.com/coleifer/huey) for executing background and periodic tasks
-
 ### Development Tools
 
 - [django-extensions](https://django-extensions.readthedocs.io/en/latest/) for additional Django commands like `shell_plus`

@@ -33,7 +33,6 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "django_htmx",
-    "huey.contrib.djhuey",
     "portmap.core",
 ]
 
@@ -270,10 +269,6 @@ LOGGING = {
             "handlers": ["json_console"],
             "level": "INFO",
         },
-        "huey": {
-            "handlers": ["json_console"],
-            "level": "INFO",
-        },
         "core": {
             "handlers": ["json_console"],
             "level": "INFO",
@@ -298,10 +293,6 @@ if DEBUG:
     }
     LOGGING["loggers"]["django_structlog"]["handlers"] = ["flat_line_file"]
     LOGGING["loggers"]["django"] = {
-        "handlers": ["rich_console", "flat_line_file"],
-        "level": "INFO",
-    }
-    LOGGING["loggers"]["huey"] = {
         "handlers": ["rich_console", "flat_line_file"],
         "level": "INFO",
     }
