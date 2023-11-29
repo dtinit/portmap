@@ -9,7 +9,14 @@
 **PortMap** is an open-source [Django](https://www.djangoproject.com/) project that hosts structured
 query access to a content repository of portability solutions.
 
-PortMap is based on [Sidewinder](https://stribny.github.io/sidewinder) which is a django starter project template,
+PortMap pulls articles on portability solutions from the
+[portability-articles](https://github.com/dtinit/portability-articles) repository, which is where
+volunteers can contribute content.
+
+The articles are organized by topic, data type, source and destination, and cached in a
+PostgreSQL DB.  The DB also captures query data so we can learn what users most need to find.
+
+PortMap's project organization is from [Sidewinder](https://stribny.github.io/sidewinder), a django starter project template,
 which sets us up with:
 
 * environment variables (and the 'environ' package) instead of juggling multiple configuration files
@@ -21,4 +28,3 @@ which sets us up with:
 * Execute automated tests using the best testing library pytest
 * Write test fixtures efficiently using factoryboy and Faker
 * End-to-end test your frontend using Playwright
-* Not be limited in customization as all important files are exposed and ready to be changed
