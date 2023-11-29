@@ -16,13 +16,24 @@ be run locally
 git pull origin main
 python3 manage.py collectstatic
 gcloud app deploy
+
+gcloud app browse
+gcloud app logs tail -s default
+'''
+
+to clean up:
+
+'''
+gcloud app versions list --format="value(version.id)" --sort-by="~version.createTime" | tail -n +6 | xargs -r gcloud app versions delete --quiet
+'''
+
+to do direct db stuff like migrations:
+
+'''
 gcloud auth application-default login
 ../bin/cloud-sql-proxy --address 0.0.0.0 --port 1234 portability-map:europe-west1:portability-map
 (edit .env to use proxy instead of direct cloud cxn)
 python3 manage.py migrate
 (reset to regular .env that gets pushed to gcloud)
 
-
-gcloud app browse
-gcloud app logs tail -s default
 '''
