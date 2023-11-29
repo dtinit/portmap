@@ -14,9 +14,13 @@ be run locally
 
 '''
 gcloud app deploy
-../bin/cloud-sql-proxy
-(edit .env)
+gcloud auth application-default login
+(stop competing SQL ports if necessary)
+../bin/cloud-sql-proxy --address 0.0.0.0 --port 5432 portability-map:europe-west1:portability-map
+(edit .env to use proxy instead of direct cloud cxn)
 python3 manage.py migrate
+(reset to local SQL and regular .env)
+
 
 gcloud app browse
 gcloud app logs tail -s default
