@@ -12,9 +12,6 @@
     - name: restart postgres
       service: name=postgresql state=restarted enabled=true
 
-    - name: restart redis
-      service: name=redis state=restarted enabled=true
-
     - name: restart app
       systemd: "name={{ app_name }} state=restarted enabled=true daemon_reload=yes"
 
@@ -35,7 +32,6 @@
         - caddy
         - postgresql
         - postgresql-server
-        - redis
         - rsync
         - jq
         - bat
@@ -226,13 +222,6 @@
       become: yes
       become_user: postgres
 
-    # Redis
-
-    - name: "Start and enable services"
-      service: "name={{ item }} state=started enabled=yes"
-      with_items:
-        - redis
-
     # Application
 
     - name: "Check out app from git"
@@ -312,7 +301,7 @@
           User={{ project_user }}
           Group=caddy
           WorkingDirectory=/srv/{{ app_name }}
-          ExecStart=/usr/local/bin/poetry run ./manage.py run_huey -w 2
+          ExecStart=/usr/local/bin/poetry run ./manage.py -w 2
           Restart=always
 
           [Install]

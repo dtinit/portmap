@@ -1,7 +1,6 @@
 import factory
 from django.contrib.auth.hashers import make_password
 from pytest_factoryboy import register
-from rest_framework.authtoken.models import Token
 
 from portmap.core.models import User
 

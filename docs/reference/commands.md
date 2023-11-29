@@ -16,7 +16,6 @@ Some useful commands:
 * `./manage.py sqlmigrate <appname> <migrationfilename>` - Examines a migration file by showing what the generated SQL looks like
 * `./manage.py sh` - Starts enhanced Python shell with auto-imported models and Django context (IPython is default)
 * `./manage.py dbshell` - Starts db shell (like PostgreSQL's psql)
-* `./manage.py run_huey` - Starts Huey consumers (this way you can test huey consumers using Redis locally)
 * `./manage.py print_settings` - Prints all Django settings
 * `./manage.py diffsettings` - See all Django settings that differ from Django's defaults
 * `./manage.py show_urls` - Shows all urlpatterns
@@ -32,7 +31,6 @@ Some useful commands:
 * `./manage.py generate_secret_key` - Generates Django secret key (useful when needing one for production)
 * `./manage.py admin_generator <appname>` - Generates the contents of admin.py for a given Django app
 * `./manage.py describe_form <appname.ModelName>` - Generates Django form based on a model
-* `./manage.py drf_create_token <username>` - Generates an API token for a given user
 * `./manage.py makemessages --locale=<locale>` (or `--all`) - Creates or updates messages files for translations
 * `./manage.py compilemessages` - Compiles .po files created by makemessages to .mo files
 * `./manage.py clear_cache` - Clears Django cache

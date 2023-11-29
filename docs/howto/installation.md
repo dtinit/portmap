@@ -22,15 +22,7 @@ git clone https://github.com/stribny/sidewinder
 
 ### Install Python 3.9+
 
-Before installing Sidewinder, you will need Python 3.9 and [Poetry](https://python-poetry.org/) dependency manager.
-
-### Install Poetry
-
-You can install Poetry with `pip`:
-
-```
-pip install poetry
-```
+Before installing Sidewinder, you will need Python 3.9
 
 ### Install watchman
 
@@ -39,7 +31,7 @@ For fast hot-reloading, make sure to install [watchman](https://facebook.github.
 ### Install graphviz (optional)
 
 Graphviz is needed by [django-extensions](https://django-extensions.readthedocs.io) for generating model diagrams. You will need to figure out how to
-install it for your system. 
+install it for your system.
 
 On Fedora, use `dnf`:
 
@@ -49,31 +41,15 @@ dnf install graphviz graphviz-devel
 
 If you plan to use this feature, install dependencies in the next step with `--with graphviz`.
 
-You can also skip this step if you don't plan to use this feature. 
+You can also skip this step if you don't plan to use this feature.
 
-## Install Sidewinder
+## Use virtualenv and pip install
 
-You can now install Sidewinder from the project's root:
-
-```bash
-poetry install
-
-# or with mkdocs
-
-poetry install --with docs
-
-# or with graphviz
-
-poetry install --with graphviz
-
-# install pre-commit hooks
-poetry run pre-commit install
-```
-
-From this point onwards, all commands should be run inside the created virtual environment. You can switch to the virtual environment with:
+In order to work on Google App Engine, which seems to require requirements.txt, this
+project ought to be run with a plain old virtual env and pip
 
 ```
-poetry shell
+pip install -r requirements.txt
 ```
 
 ## Install Playwright

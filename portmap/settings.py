@@ -32,14 +32,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "allauth",
     "allauth.account",
-    "rest_framework",
-    "rest_framework.authtoken",
-    "drf_spectacular",
-    "drf_spectacular_sidecar",
-    "drf_standardized_errors",
-    "corsheaders",
     "django_htmx",
-    "huey.contrib.djhuey",
     "portmap.core",
 ]
 
@@ -51,7 +44,6 @@ if DEBUG:
     ]
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -223,19 +215,6 @@ PASSWORD_HASHERS = [
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_URLS_REGEX = r"^/api/.*$"
 
-# HUEY
-
-HUEY = {
-    "huey_class": "huey.PriorityRedisExpireHuey",
-    "url": env.str("REDIS_URL", default="redis://127.0.0.1:6379?db=1"),
-}
-
-# Set to True to bypass redis in development
-HUEY_DEV = env.bool("HUEY_DEV", default=True)
-if not HUEY_DEV and DEBUG:
-    HUEY["immediate_use_memory"] = False
-    HUEY["immediate"] = False
-
 # Shell plus from django-extensions
 
 SHELL_PLUS = "ipython"
@@ -290,10 +269,6 @@ LOGGING = {
             "handlers": ["json_console"],
             "level": "INFO",
         },
-        "huey": {
-            "handlers": ["json_console"],
-            "level": "INFO",
-        },
         "core": {
             "handlers": ["json_console"],
             "level": "INFO",
@@ -318,10 +293,6 @@ if DEBUG:
     }
     LOGGING["loggers"]["django_structlog"]["handlers"] = ["flat_line_file"]
     LOGGING["loggers"]["django"] = {
-        "handlers": ["rich_console", "flat_line_file"],
-        "level": "INFO",
-    }
-    LOGGING["loggers"]["huey"] = {
         "handlers": ["rich_console", "flat_line_file"],
         "level": "INFO",
     }

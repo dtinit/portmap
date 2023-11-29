@@ -1,17 +1,6 @@
-# Sidewinder
+# Portmap
 
-<figure markdown>
-  ![Sidewinder](sidewinder.png){ width="200" }
-  <figcaption></figcaption>
-</figure>
-
-**Sidewinder** is an open-source [Django](https://www.djangoproject.com/) starter kit that focuses on good defaults, developer experience, and deployment. Also, [a snake](https://en.wikipedia.org/wiki/Crotalus_cerastes).
-
-You can start a new Django project without worrying about the correct project structure, or what development and testing tools to install and how to configure them. You can also deploy your new project right away with provided Ansible playbook in a few minutes.
-
-## Philosophy
-
-Sidewinder is opinionated to provide smooth experience from starting a new project to deploying it on a single Virtual Private Server (VPS). It is ideal for indie hackers, educators, students and the like.
+This project is based on Sidewinder project template, modifying here as I diverge.
 
 ## Main features
 
@@ -32,17 +21,6 @@ Sidewinder is opinionated to provide smooth experience from starting a new proje
 - It is expected that you bring your own CSS/CSS framework
 - Basic one-file CSS is included to style authentication-related and example pages
 - Configured [htmx](https://htmx.org/) for smoother frontend interactions
-
-### HTTP APIs
-
-- [Django REST Framework](https://www.django-rest-framework.org/) for writing REST APIs with configured token authentication
-- [drf-spectacular](https://drf-spectacular.readthedocs.io/en/latest/) for HTTP API documentation
-- [drf-standardized-errors](https://drf-standardized-errors.readthedocs.io) for standardized API responses, including configuration for drf-spectacular
-- [django-cors-headers](https://github.com/adamchainz/django-cors-headers) to allow cross-origin requests (restricted to HTTP API endpoints)
-
-### Task queue
-
-- [huey](https://github.com/coleifer/huey) for executing background and periodic tasks
 
 ### Development Tools
 
@@ -74,5 +52,5 @@ Sidewinder is opinionated to provide smooth experience from starting a new proje
   - [Fedora](https://getfedora.org/) as the compatible operating system
   - [PostgreSQL](https://www.postgresql.org/) as the database
   - [Caddy](https://caddyserver.com/) as the reverse proxy server
-  - [gunicorn](https://gunicorn.org/) as the WSGI HTTP Server 
+  - [gunicorn](https://gunicorn.org/) as the WSGI HTTP Server
   - `systemd` service

@@ -22,7 +22,6 @@ status:
 	ssh -t $(TARGET) "systemctl status $(APP_NAME) --no-pager"
 	ssh -t $(TARGET) "systemctl status $(APP_NAME)_queue --no-pager"
 	ssh -t $(TARGET) "systemctl status postgresql --no-pager"
-	ssh -t $(TARGET) "systemctl status redis --no-pager"
 	ssh -t $(TARGET) "systemctl status caddy --no-pager"
 
 appservicelog:
