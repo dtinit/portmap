@@ -18,8 +18,8 @@ def _get_github_private_key():
     if settings.GITHUB_PRIVATE_KEY_PEM_FILE:
         with open(settings.GITHUB_PRIVATE_KEY_PEM_FILE, 'rb') as pem_file:
             return jwt.jwk_from_pem(pem_file.read())
-    elif settings.GITHUB_PRIVATE_KEY:
-        return settings.GITHUB_PRIVATE_KEY
+    elif settings.GITHUB_PRIVATE_KEY_PEM_FILE_CONTENTS:
+        return jwt.jwk_from_pem(settings.GITHUB_PRIVATE_KEY_PEM_FILE_CONTENTS)
 
 
 def _construct_github_jwt(signing_key, app_id):

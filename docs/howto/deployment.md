@@ -13,13 +13,14 @@ I used these instructions: https://cloud.google.com/python/django/run
 be run locally
 
 '''
+git pull origin main
+python3 manage.py collectstatic
 gcloud app deploy
 gcloud auth application-default login
-(stop competing SQL ports if necessary)
-../bin/cloud-sql-proxy --address 0.0.0.0 --port 5432 portability-map:europe-west1:portability-map
+../bin/cloud-sql-proxy --address 0.0.0.0 --port 1234 portability-map:europe-west1:portability-map
 (edit .env to use proxy instead of direct cloud cxn)
 python3 manage.py migrate
-(reset to local SQL and regular .env)
+(reset to regular .env that gets pushed to gcloud)
 
 
 gcloud app browse
