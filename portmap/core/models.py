@@ -48,6 +48,9 @@ class Article(BaseModel):
         self.sources = Article._reformat_yaml_list(self.sources)
         self.destinations = Article._reformat_yaml_list(self.destinations)
 
+    def __str__(self):
+        return self.name
+
     @classmethod
     def _reformat_yaml_list(cls, the_list):
         return ','.join([item.strip(" '") for item in the_list.strip('[]').split(',')])

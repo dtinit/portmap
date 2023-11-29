@@ -97,9 +97,6 @@ def find_articles(request):
 def debug_list_articles(request):
     if not settings.DEBUG:
         raise Http404
-    if "populate" in request.GET.keys():
-        get_content_files()
-        redirect('core/debug_article_list.html')
     articles = Article.objects.all()
     return TemplateResponse(request, "core/debug_article_list.html", {"articles": articles})
 

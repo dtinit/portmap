@@ -3,11 +3,12 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.static import serve
 
-from .core import api, views
+from .core import views
+from .core.admin import admin_site
 
 urlpatterns = [
     # admin
-    path("dj-admin/", admin.site.urls),
+    path("dj-admin/", admin_site.urls),
     # accounts
     path("accounts/login/", views.LoginView.as_view(), name="account_login"),
     path("accounts/", include("allauth.urls")),
