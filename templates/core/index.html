@@ -13,62 +13,16 @@
         Query the Portability Map
     </h3>
 
-    <form method="post" action="find_articles">
+    <form method="post" action="find_articles" id="query_form">
         {% csrf_token %}
         {{ form }}
         <button type="submit">{% translate "Submit" %}</button>
     </form>
 
 </section>
-    <script>
-        const typeDropdown = document.getElementById("id_datatype");
-        const sourceDropdown = document.getElementById("id_datasource");
-        const destDropdown = document.getElementById("id_datadest");
-        var queryStructure = JSON.parse('{{ query_structure|safe }}');
+<script>
+    const queryStructure = JSON.parse('{{ query_structure|safe }}');
+</script>
+<script src="{% static 'js/query_form.js' %}"></script>
 
-        // Add an event listener so that when the content type is chosen, a list of known sources is populated
-        // for the next step
-        typeDropdown.addEventListener("change", function () {
-            sourceDropdown.innerHTML = "";
-            const selectedType = typeDropdown.value;
-            const known_sources = Object.keys(queryStructure[selectedType]);
-
-            // Create and add options to the second drop-down
-            var defaultOption = document.createElement('option');
-            defaultOption.text = 'Select an option';
-            defaultOption.value = '';
-            sourceDropdown.add(defaultOption, sourceDropdown.options[0]);
-            sourceDropdown.selectedIndex = 0;
-
-            known_sources.forEach((source) => {
-                const option = document.createElement("option");
-                option.text = source;
-                option.value = source;
-                sourceDropdown.appendChild(option);
-            });
-            sourceDropdown.disabled = false;
-        });
-
-        sourceDropdown.addEventListener("change", function () {
-            destDropdown.innerHTML = "";
-            const selectedType = typeDropdown.value;
-            const selectedSource = sourceDropdown.value;
-            const known_destinations = queryStructure[selectedType][selectedSource];
-
-            // Create and add options to the destination drop-down
-            var defaultOption = document.createElement('option');
-            defaultOption.text = 'Select an option';
-            defaultOption.value = '';
-            destDropdown.add(defaultOption, destDropdown.options[0]);
-            destDropdown.selectedIndex = 0;
-
-            known_destinations.forEach((dest) => {
-                const option = document.createElement("option");
-                option.text = dest;
-                option.value = dest;
-                destDropdown.appendChild(option);
-            });
-            destDropdown.disabled = false;
-        });
-    </script>
 {% endblock content %}

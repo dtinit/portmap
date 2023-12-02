@@ -8,6 +8,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
+from django.utils.safestring import mark_safe
 
 from .forms import UpdateAccountForm, QueryIndexForm
 from .models import User, Article
@@ -69,10 +70,10 @@ def login_as_user(request):
 
 
 def display_article(request, article_name):
-    article_content = Article.objects.get(name=article_name).body
-    html = markdown.markdown(article_content)
+    article = Article.objects.get(name=article_name)
+    html = mark_safe(markdown.markdown(article.body))
 
-    return HttpResponse(html)
+    return TemplateResponse(request, "core/article.html", {'article': article, 'article_body_html': html})
 
 
 def find_articles(request):

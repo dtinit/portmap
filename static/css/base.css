@@ -1,4 +1,4 @@
-/* 
+/*
 Colors and other variables
 */
 
@@ -57,9 +57,9 @@ Font scale from Utopia
   --step-5: clamp(2.64rem, calc(2.24rem + 2.04vw), 3.82rem);
 }
 
-/* 
+/*
 Minimal CSS reset
-https://www.joshwcomeau.com/css/custom-css-reset/ 
+https://www.joshwcomeau.com/css/custom-css-reset/
 */
 
 *, *::before, *::after {
@@ -109,25 +109,25 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size: var(--step-4);
+  font-size: var(--step-3);
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
 
 h2 {
-  font-size: var(--step-3);
+  font-size: var(--step-2);
   margin-top: 2rem;
   margin-bottom: 0.8rem;
 }
 
 h3 {
-  font-size: var(--step-2);
+  font-size: var(--step-1);
   margin-top: 2rem;
   margin-bottom: var(--margin-bottom);
 }
 
 h4 {
-  font-size: var(--step-1);
+  font-size: var(--step-0);
   margin-bottom: var(--margin-bottom);
 }
 
