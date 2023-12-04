@@ -1,6 +1,7 @@
-// query_form.js handles populating the query form dropdowns on index.html.
-// Dropdowns are filled based on selections so far, rather than show 100s of items
-// not all of which are consistent.
+// query_form.js handles populating the query form dropdowns on index.html,
+// as well as saving form state to session storage to smooth the user experience.
+// Dropdowns are filled based on selections so far, rather than show all options
+// some of which are invalid for the content type chosen.
 
 function setupDropdown(dropdownElement, possibleValues) {
     dropdownElement.innerHTML = "";
@@ -24,60 +25,65 @@ function setupDropdown(dropdownElement, possibleValues) {
 
 }
 
-const typeDropdown = document.getElementById("id_datatype");
-const sourceDropdown = document.getElementById("id_datasource");
-const destDropdown = document.getElementById("id_datadest");
+document.addEventListener('DOMContentLoaded', function() {
 
-function saveFormState() {
-    sessionStorage.setItem('selectedType', typeDropdown.value);
-    sessionStorage.setItem('selectedSource', sourceDropdown.value);
-    sessionStorage.setItem('selectedDest', destDropdown.value);
-}
+  let typeDropdown = document.getElementById("id_datatype");
+  let sourceDropdown = document.getElementById("id_datasource");
+  let destDropdown = document.getElementById("id_datadest");
 
-// Add an event listener so that when the content type is chosen, a list of known sources is populated
-// for the next step
-typeDropdown.addEventListener("change", function () {
+  if (!(typeDropdown && sourceDropdown && destDropdown)) {
+    console.error("Missing expected form elements - id_datatype, id_datasource and id_datadest");
+    return;
+  }
+
+  function saveFormState() {
+    try {
+      sessionStorage.setItem('selectedType', typeDropdown.value);
+      sessionStorage.setItem('selectedSource', sourceDropdown.value);
+      sessionStorage.setItem('selectedDest', destDropdown.value);
+    } catch (e) {
+      console.log("Session storage not available; form contents may reset")
+    }
+  }
+
+  // Add an event listener so that when the content type is chosen, a list of known sources is populated
+  // for the next step
+  typeDropdown.addEventListener("change", function () {
     saveFormState();
-    const selectedType = typeDropdown.value;
-    const knownSources = Object.keys(queryStructure[selectedType]);
-    setupDropdown(sourceDropdown, knownSources);
+    setupDropdown(sourceDropdown, Object.keys(queryStructure[typeDropdown.value]));
     setupDropdown(destDropdown, []);
-});
+  });
 
-// Then when the source for data is chosen, a list of destinations
-sourceDropdown.addEventListener("change", function () {
+  // Then when the source for data is chosen, a list of destinations
+  sourceDropdown.addEventListener("change", function () {
     saveFormState();
-    const selectedType = typeDropdown.value;
-    const selectedSource = sourceDropdown.value;
-    const knownDestinations = queryStructure[selectedType][selectedSource];
+    setupDropdown(destDropdown, queryStructure[typeDropdown.value][sourceDropdown.value]);
+  });
 
-    setupDropdown(destDropdown, knownDestinations);
+  destDropdown.addEventListener('change', saveFormState);
 
+  // Restore form state
+  function restoreFormState() {
+    try {
+      let selectedType = sessionStorage.getItem('selectedType');
+      if (selectedType && selectedType !== typeDropdown.value) {
+          typeDropdown.value = selectedType;
+          setupDropdown(sourceDropdown, Object.keys(queryStructure[selectedType]));
+      }
+      let selectedSource = sessionStorage.getItem('selectedSource');
+      if (selectedSource && selectedSource !== sourceDropdown.value) {
+          sourceDropdown.value = selectedSource;
+          setupDropdown(destDropdown, queryStructure[selectedType][selectedSource]);
+      }
+      let selectedDest = sessionStorage.getItem('selectedDest');
+      if (selectedDest && selectedDest !== destDropdown.value) {
+          destDropdown.value = selectedDest;
+      }
+    } catch (e) {
+      console.log("Error restoring form state - sessionStorage may not be available", e)
+    }
+  }
+
+  // Call this function when the page loads in case it loads from a "back" action
+  restoreFormState();
 });
-
-
-destDropdown.addEventListener('change', saveFormState);
-
-// Restore form state
-function restoreFormState() {
-    let selectedType = sessionStorage.getItem('selectedType');
-    if (selectedType && selectedType != typeDropdown.value) {
-        typeDropdown.value = selectedType;
-        let knownSources = Object.keys(queryStructure[selectedType]);
-        setupDropdown(sourceDropdown, knownSources);
-    }
-    let selectedSource = sessionStorage.getItem('selectedSource');
-    if (selectedSource && selectedSource != sourceDropdown.value) {
-        sourceDropdown.value = selectedSource;
-        let knownDestinations = queryStructure[selectedType][selectedSource];
-        setupDropdown(destDropdown, knownDestinations);
-    }
-    let selectedDest = sessionStorage.getItem('selectedDest');
-    if (selectedDest && selectedDest != destDropdown.value) {
-        destDropdown.value = selectedDest;
-    }
-}
-
-// Call this function when the page loads
-
-restoreFormState();
