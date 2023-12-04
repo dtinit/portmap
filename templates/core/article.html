@@ -1,0 +1,12 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load i18n %}
+{% block full_title %}{{ article.title }}{% endblock full_title %}
+{% block content %}
+<section class="page page--wide">
+<title>{{ article.title }}</title>
+    {% include "includes/messages.html" %}
+
+    {{ article_body_html }}
+</section>
+{% endblock content %}
