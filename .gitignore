@@ -25,6 +25,9 @@ staticfiles
 # C extensions
 *.so
 
+# Security
+*.pem
+
 # Distribution / packaging
 .Python
 build/
