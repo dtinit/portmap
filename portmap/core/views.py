@@ -10,8 +10,8 @@ from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
 
-from .forms import UpdateAccountForm, QueryIndexForm, ReactionForm
-from .models import User, Article
+from .forms import UpdateAccountForm, QueryIndexForm, ArticleFeedbackForm
+from .models import User, Article, Feedback
 
 
 def index(request):
@@ -71,7 +71,7 @@ def login_as_user(request):
 def display_article(request, article_name):
     article = Article.objects.get(name=article_name)
     html = mark_safe(markdown.markdown(article.body))
-    context = {'article': article, 'article_body_html': html, 'reaction_form': ReactionForm()}
+    context = {'article': article, 'article_body_html': html, 'reaction_form': ArticleFeedbackForm()}
     return TemplateResponse(request, "core/article.html", context)
 
 
@@ -93,6 +93,13 @@ def find_articles(request):
         form = QueryIndexForm(data=None, datatypes=datatypes)
         return TemplateResponse(request, "core/index.html", {'form': form, 'datatypes': datatypes})
 
+def article_feedback(request, article_name):
+    if request.method == "POST":
+        form = ArticleFeedbackForm(data=request.POST)
+        Feedback.objects.create(article=Article.objects.get(name=article_name),
+                                reaction=form.data['reaction'],
+                                explanation=form.data['explanation'])
+        return HttpResponse("Thank you for your feedback")
 
 def debug_list_articles(request):
     if not settings.DEBUG:

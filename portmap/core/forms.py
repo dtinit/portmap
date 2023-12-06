@@ -42,10 +42,10 @@ class QueryIndexForm(forms.Form):
         self.fields['datasource'].disabled = True
         self.fields['datadest'].disabled = True
 
-class ReactionForm(forms.Form):
-    choices = [('happy', '<span>yes</span>'),
+class ArticleFeedbackForm(forms.Form):
+    CHOICES = [('happy', '<span>yes</span>'),
                ('sad', '<span>no</span>')]
-    reaction = forms.ChoiceField(label="Did this article help?", widget=forms.RadioSelect, choices=choices)
+    reaction = forms.ChoiceField(label="Did this article help?", widget=forms.RadioSelect, choices=CHOICES)
     explanation = forms.CharField(widget=forms.Textarea,
                                   required=False,
                                   label="Please tell us about your use case or what would make this article better")

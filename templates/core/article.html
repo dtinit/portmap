@@ -12,7 +12,7 @@
     {{ article_body_html }}
 
     <br><hr>
-    <form method="post" action="article_feedback" id="query_form">
+    <form method="post" action="feedback" id="query_form">
         {% csrf_token %}
         {{ reaction_form }}
 

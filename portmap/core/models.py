@@ -60,3 +60,15 @@ class Article(BaseModel):
 
     def destination_list(self):
         return self.destinations.split(',')
+
+class Feedback(BaseModel):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    REACTION_CHOICES = [
+        ('happy', 'happy'),
+        ('sad', "sad"),
+    ]
+    reaction = models.CharField(
+        max_length=10,
+        choices=REACTION_CHOICES,
+        default='happy')
+    explanation = models.TextField()
