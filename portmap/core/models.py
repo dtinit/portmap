@@ -37,7 +37,8 @@ class Article(BaseModel):
             datatype = article.datatype
             for source in article.source_list():
                 for dest in article.destination_list():
-                    structure[datatype][source].append(dest)
+                    if dest != source:
+                        structure[datatype][source].append(dest)
         return structure
 
     def save(self, *args, **kwargs):
