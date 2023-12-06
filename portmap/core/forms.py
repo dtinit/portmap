@@ -2,9 +2,7 @@ from allauth.account.forms import SignupForm
 from django import forms
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.forms.renderers import TemplatesSetting
-from django.utils import timezone
-from django.utils.translation import gettext
-from django.utils.translation import gettext_lazy as _
+from django.utils.safestring import mark_safe
 
 from .models import User
 
@@ -43,3 +41,11 @@ class QueryIndexForm(forms.Form):
         self.fields['datatype'].choices = [("", "Select an option")] + [(item, item) for item in datatypes]
         self.fields['datasource'].disabled = True
         self.fields['datadest'].disabled = True
+
+class ReactionForm(forms.Form):
+    choices = [('happy', '<span>yes</span>'),
+               ('sad', '<span>no</span>')]
+    reaction = forms.ChoiceField(label="Did this article help?", widget=forms.RadioSelect, choices=choices)
+    explanation = forms.CharField(widget=forms.Textarea,
+                                  required=False,
+                                  label="Please tell us about your use case or what would make this article better")

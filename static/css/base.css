@@ -76,7 +76,6 @@ body {
 }
 
 img, picture, video, canvas, svg {
-  display: block;
   max-width: 100%;
 }
 
@@ -339,4 +338,9 @@ thead tr {
   -moz-border-radius: var(--border-radius);
   -webkit-border-radius: var(--border-radius);
   padding: var(--padding-base);
+}
+
+/* Temp new stuff - some we might keep when we replace this base.css */
+fieldset {
+  border:none;
 }

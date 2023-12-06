@@ -1,12 +1,25 @@
 {% extends '_base.html' %}
 {% load static %}
 {% load i18n %}
+{% block header %}
+<script src="https://unpkg.com/lucide@latest"></script>
+{% endblock header %}
 {% block full_title %}{{ article.title }}{% endblock full_title %}
 {% block content %}
 <section class="page page--wide">
-<h1>{{ article.title }}</h1>
     {% include "includes/messages.html" %}
 
     {{ article_body_html }}
+
+    <br><hr>
+    <form method="post" action="article_feedback" id="query_form">
+        {% csrf_token %}
+        {{ reaction_form }}
+
+        <button type="submit">{% translate "Submit" %}</button>
+    </form>
+
 </section>
+<script src="{% static 'js/article.js' %}"></script>
+
 {% endblock content %}

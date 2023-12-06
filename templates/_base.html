@@ -9,6 +9,7 @@
 <meta name="description" content="">
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
 <script src="{% static 'js/htmx.min.js' %}" defer></script>
+{% block header %}{% endblock header %}
 </head>
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 {% block content %}

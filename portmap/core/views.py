@@ -10,9 +10,8 @@ from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
 
-from .forms import UpdateAccountForm, QueryIndexForm
+from .forms import UpdateAccountForm, QueryIndexForm, ReactionForm
 from .models import User, Article
-from .articles import get_content_files
 
 
 def index(request):
@@ -72,8 +71,8 @@ def login_as_user(request):
 def display_article(request, article_name):
     article = Article.objects.get(name=article_name)
     html = mark_safe(markdown.markdown(article.body))
-
-    return TemplateResponse(request, "core/article.html", {'article': article, 'article_body_html': html})
+    context = {'article': article, 'article_body_html': html, 'reaction_form': ReactionForm()}
+    return TemplateResponse(request, "core/article.html", context)
 
 
 def find_articles(request):
