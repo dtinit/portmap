@@ -10,9 +10,10 @@ function setupDropdown(dropdownElement, possibleValues) {
     defaultOption.value = '';
     dropdownElement.add(defaultOption, dropdownElement.options[0]);
     dropdownElement.selectedIndex = 0;
+    let uniqueValues = [...new Set(possibleValues)];
 
-    if (possibleValues.length > 0) {
-        possibleValues.forEach((value) => {
+    if (uniqueValues.length > 0) {
+        uniqueValues.forEach((value) => {
             const option = document.createElement("option");
             option.text = value;
             option.value = value;

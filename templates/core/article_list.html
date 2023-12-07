@@ -9,14 +9,10 @@
     <table>
    <tr>
        <th>Article</th>
-       <th>Title</th>
-       <th>Content type</th>
    </tr>
    {% for item in articles %}
        <tr>
-           <td>{{item.Article}}</td>
-           <td>{{item.title}}</td>
-           <td>{{item.datatype }}</td>
+           <td><a href="{{ item.get_absolute_url }}">{{item.title}}</a></td>
        </tr>
    {% endfor %}
 </table>

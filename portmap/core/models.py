@@ -1,7 +1,7 @@
 from collections import defaultdict
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.urls import reverse
 
 
 class BaseModel(models.Model):
@@ -51,6 +51,10 @@ class Article(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        # Return the URL for the instance
+        return reverse('display_article', args=[str(self.name)])
 
     @classmethod
     def _reformat_yaml_list(cls, the_list):
