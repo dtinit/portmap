@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.urls import path
 
 from .forms import UserChangeForm, UserCreationForm
-from .models import User, Article
+from .models import User, Article, Feedback
 from .articles import get_content_files
 
 
@@ -34,6 +34,9 @@ class ArticleAdmin(admin.ModelAdmin):
         get_content_files()
         return HttpResponse("Done")
 
+@register(Feedback, site=admin_site)
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = ("id", "article", "reaction", "explanation")
 
 @register(User, site=admin_site)
 class CustomUserAdmin(UserAdmin):
