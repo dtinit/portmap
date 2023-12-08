@@ -77,3 +77,4 @@ class Feedback(BaseModel):
         choices=REACTION_CHOICES,
         default='happy')
     explanation = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)

@@ -36,7 +36,7 @@ class ArticleAdmin(admin.ModelAdmin):
 
 @register(Feedback, site=admin_site)
 class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ("id", "article", "reaction", "explanation")
+    list_display = ("id", "article", "created_at", "reaction", "explanation")
 
 @register(User, site=admin_site)
 class CustomUserAdmin(UserAdmin):
