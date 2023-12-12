@@ -16,6 +16,7 @@ urlpatterns = [
     path("accounts/delete-account/", views.delete_account, name="delete_account"),
     # articles
     path("articles/<article_name>/feedback", views.article_feedback, name="article_feedback"),
+    path('usecase_feedback', views.usecase_feedback, name='usecase_feedback'),
     path("articles/<article_name>/", views.display_article, name="display_article"),
     path("find_articles", views.find_articles, name="find_articles"),
     # core

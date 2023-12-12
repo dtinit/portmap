@@ -10,8 +10,8 @@ from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
 
-from .forms import UpdateAccountForm, QueryIndexForm, ArticleFeedbackForm
-from .models import User, Article, Feedback
+from .forms import UpdateAccountForm, QueryIndexForm, ArticleFeedbackForm, UseCaseFeedbackForm
+from .models import User, Article, Feedback, QueryLog, UseCaseFeedback
 
 
 def index(request):
@@ -84,10 +84,18 @@ def find_articles(request):
             possible_articles = Article.objects.filter(datatype__contains=form.data['datatype'],
                                                        sources__contains=form.data['datasource'],
                                                        destinations__contains=form.data['datadest'])
+            QueryLog.objects.create(datatype=form.data['datatype'],
+                                    source=form.data['datasource'],
+                                    destination=form.data['datadest'])
             if possible_articles.count() == 1:
                 return redirect(f"/articles/{possible_articles[0].name}", )
             else:
-                return TemplateResponse(request, "core/article_list.html", {'articles': possible_articles})
+                use_case_feedback= UseCaseFeedbackForm(data=None,
+                                                       datatype=form.data['datatype'],
+                                                       source=form.data['datasource'],
+                                                       destination=form.data['datadest'])
+                context = {'articles': possible_articles, 'usecase_form': use_case_feedback}
+                return TemplateResponse(request, "core/article_list.html", context)
 
     else:
         form = QueryIndexForm(data=None, datatypes=datatypes)
@@ -100,6 +108,14 @@ def article_feedback(request, article_name):
                                 reaction=form.data['reaction'],
                                 explanation=form.data['explanation'])
         return HttpResponse("Thank you for your feedback")
+    # LMD TODO: else case
+
+def usecase_feedback(request):
+    if request.method == "POST":
+        form = UseCaseFeedbackForm(data=request.POST)
+        new_feedback = form.save()
+        return HttpResponse("Thank you for your feedback")
+    # LMD TODO: else case
 
 def debug_list_articles(request):
     if not settings.DEBUG:

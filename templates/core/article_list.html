@@ -16,5 +16,11 @@
        </tr>
    {% endfor %}
 </table>
+
+    <form method="post" action="usecase_feedback" id="multiple_option_feedback_form">
+        {% csrf_token %}
+        {{ usecase_form }}
+        <button type="submit">{% translate "Submit" %}</button>
+    </form>
 </section>
 {% endblock content %}
