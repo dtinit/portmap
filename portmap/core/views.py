@@ -1,3 +1,4 @@
+from functools import wraps
 import json
 import markdown
 from allauth.account.views import LoginView as AllAuthLoginView
@@ -13,6 +14,15 @@ from django.utils.safestring import mark_safe
 from .forms import UpdateAccountForm, QueryIndexForm, ArticleFeedbackForm, UseCaseFeedbackForm
 from .models import User, Article, Feedback, QueryLog, UseCaseFeedback
 
+
+def ux_requires_post(function):
+    @wraps(function)
+    def _wrap_requires_post(request, *args, **kwargs):
+        if request.method == "POST":
+            return function(request, *args, **kwargs)
+        messages.success(request, "Page not GETtable, returning home")
+        return redirect("index")
+    return _wrap_requires_post
 
 def index(request):
     query_structure = Article.get_query_structure()
@@ -101,21 +111,21 @@ def find_articles(request):
         form = QueryIndexForm(data=None, datatypes=datatypes)
         return TemplateResponse(request, "core/index.html", {'form': form, 'datatypes': datatypes})
 
-def article_feedback(request, article_name):
-    if request.method == "POST":
-        form = ArticleFeedbackForm(data=request.POST)
-        Feedback.objects.create(article=Article.objects.get(name=article_name),
-                                reaction=form.data['reaction'],
-                                explanation=form.data['explanation'])
-        return HttpResponse("Thank you for your feedback")
-    # LMD TODO: else case
 
+@ux_requires_post
+def article_feedback(request, article_name):
+    form = ArticleFeedbackForm(data=request.POST)
+    Feedback.objects.create(article=Article.objects.get(name=article_name),
+                            reaction=form.data['reaction'],
+                            explanation=form.data['explanation'])
+    return TemplateResponse(request, "core/thankyou.html")
+
+
+@ux_requires_post
 def usecase_feedback(request):
-    if request.method == "POST":
-        form = UseCaseFeedbackForm(data=request.POST)
-        new_feedback = form.save()
-        return HttpResponse("Thank you for your feedback")
-    # LMD TODO: else case
+    UseCaseFeedbackForm(data=request.POST).save()
+    return TemplateResponse(request, "core/thankyou.html")
+
 
 def debug_list_articles(request):
     if not settings.DEBUG:
