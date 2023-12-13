@@ -67,7 +67,6 @@ class Article(BaseModel):
         return self.destinations.split(',')
 
 class Feedback(BaseModel):
-    created_at = models.DateTimeField(auto_now_add=True)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     REACTION_CHOICES = [
         ('happy', 'happy'),
@@ -80,14 +79,12 @@ class Feedback(BaseModel):
     explanation = models.TextField()
 
 class UseCaseFeedback(BaseModel):
-    created_at = models.DateTimeField(auto_now_add=True)
     datatype = models.CharField(max_length=30)
     source = models.TextField(max_length=100)
     destination = models.TextField(max_length=100)
     explanation = models.TextField()
 
 class QueryLog(BaseModel):
-    created_at = models.DateTimeField(auto_now_add=True)
     datatype = models.CharField(max_length=30)
     source = models.TextField(max_length=100)
     destination = models.TextField(max_length=100)
