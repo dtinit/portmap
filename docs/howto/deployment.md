@@ -37,3 +37,5 @@ python3 manage.py migrate
 (reset to regular .env that gets pushed to gcloud)
 
 '''
+
+LMDTODO: these need to be put into a script - instead of editing .env, have a env variable for proxy run right from the command
