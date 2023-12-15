@@ -67,9 +67,11 @@ class UseCaseFeedbackForm(forms.ModelForm):
 
     def __init__(self, data, datatype=None, source=None, destination=None):
         super().__init__(data=data)
-        if datatype and source and destination:
+        if datatype:
             self.fields['datatype'].initial = datatype
+        if source:
             self.fields['source'].initial = source
+        if destination:
             self.fields['destination'].initial = destination
             # Populating the form with values we already know
 

@@ -123,12 +123,8 @@ def article_feedback(request, article_name):
 
 @ux_requires_post
 def usecase_feedback(request):
-    try:
-        the_form = UseCaseFeedbackForm(data=request.POST)
-        the_form.save()
-        return TemplateResponse(request, "core/thankyou.html")
-    except ValueError as ve:
-        raise ValueError(f"Form validation failed, detail: {the_form.errors}")
+    UseCaseFeedbackForm(data=request.POST).save()
+    return TemplateResponse(request, "core/thankyou.html")
 
 
 def debug_list_articles(request):

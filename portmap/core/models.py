@@ -80,8 +80,8 @@ class Feedback(BaseModel):
 
 class UseCaseFeedback(BaseModel):
     datatype = models.CharField(max_length=30, null=True)
-    source = models.TextField(max_length=100, null=True)
-    destination = models.TextField(max_length=100, null=True)
+    source = models.TextField(max_length=100, null=True, blank=True)
+    destination = models.TextField(max_length=100, null=True, blank=True)
     explanation = models.TextField()
 
 class QueryLog(BaseModel):
