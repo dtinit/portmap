@@ -7,4 +7,4 @@ def test_get_query_structure():
     result = Article.get_query_structure()
 
     assert len(result.keys()) == 1
-    assert result['DT'] == {'s1':{'d1':['a1'],'d2':['a1']},'s2':{'d1':['a1'],'d2':['a1']}}
+    assert result['DT'] == {'s1':['d1','d2'],'s2':['d1','d2']}
