@@ -16,7 +16,7 @@ volunteers can contribute content.
 The articles are organized by topic, data type, source and destination, and cached in a
 PostgreSQL DB.  The DB also captures query data so we can learn what users most need to find.
 
-PortMap's project organization is from [Sidewinder](https://stribny.github.io/sidewinder), a django starter project template,
+PortMap's original project organization is from [Sidewinder](https://stribny.github.io/sidewinder), a django starter project template,
 which sets us up with:
 
 * environment variables (and the 'environ' package) instead of juggling multiple configuration files
@@ -27,4 +27,3 @@ which sets us up with:
 * Log anything you want with structured logging
 * Execute automated tests using the best testing library pytest
 * Write test fixtures efficiently using factoryboy and Faker
-* End-to-end test your frontend using Playwright
