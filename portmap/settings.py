@@ -279,12 +279,12 @@ LOGGING = {
 if DEBUG:
     LOGGING["handlers"]["flat_line_file"] = {
         "class": "logging.handlers.WatchedFileHandler",
-        "filename": "logs/flat_line.log",
+        "filename": os.path.join(BASE_DIR, "logs/flat_line.log"),
         "formatter": "key_value",
     }
     LOGGING["handlers"]["sql_line_file"] = {
         "class": "logging.handlers.WatchedFileHandler",
-        "filename": "logs/flat_line.log",
+        "filename": os.path.join(BASE_DIR, "logs/flat_line.log"),
         "filters": ["require_debug_true"],
     }
     LOGGING["handlers"]["rich_console"] = {
