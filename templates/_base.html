@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
 <script src="{% static 'js/htmx.min.js' %}" defer></script>
 {% block header %}{% endblock header %}
+<link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+<link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
 </head>
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 {% block content %}

@@ -16,10 +16,14 @@
         {% csrf_token %}
         {{ reaction_form }}
 
-        <button type="submit">{% translate "Submit" %}</button>
+        <button type="submit">{% translate "Give feedback" %}</button>
     </form>
+
+<p class="endnote">The source code (markdown) for this article can be found <a
+href="https://github.com/dtinit/portability-articles/blob/main/articles/{{ article_name }}">on GitHub</a>.</p>
 
 </section>
 <script src="{% static 'js/article.js' %}"></script>
+
 
 {% endblock content %}
