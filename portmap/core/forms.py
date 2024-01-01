@@ -46,7 +46,7 @@ class ArticleFeedbackForm(forms.Form):
     reaction = forms.ChoiceField(label="Did this article help?", widget=forms.RadioSelect, choices=CHOICES)
     explanation = forms.CharField(widget=forms.Textarea,
                                   required=False,
-                                  label="Please tell us about your use case or what would make this article better")
+                                  label="What is your use case? What would make this article better?")
 
 class UseCaseFeedbackForm(forms.ModelForm):
     class Meta:

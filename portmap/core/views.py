@@ -81,7 +81,10 @@ def login_as_user(request):
 def display_article(request, article_name):
     article = Article.objects.get(name=article_name)
     html = mark_safe(markdown.markdown(article.body))
-    context = {'article': article, 'article_body_html': html, 'reaction_form': ArticleFeedbackForm()}
+    context = {'article': article,
+               'article_body_html': html,
+               'article_name': article_name,
+               'reaction_form': ArticleFeedbackForm()}
     return TemplateResponse(request, "core/article.html", context)
 
 
