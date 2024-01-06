@@ -11,8 +11,10 @@ DTI is running this on Google Cloud at present, using Google App Engine and Clou
 I used these instructions: https://cloud.google.com/python/django/run
 * including the part about proxying to Cloud SQL so that commands to migrate the db could
 be run locally
+* deploying from a directory just for deploy means I have an .env file ready for deploy in that directory
 
 '''
+cd portmap-deploy
 git pull origin main
 python3 manage.py collectstatic
 gcloud app deploy

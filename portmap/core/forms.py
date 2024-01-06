@@ -53,10 +53,11 @@ class UseCaseFeedbackForm(forms.ModelForm):
         model = UseCaseFeedback
         fields = ['explanation', 'datatype', 'source', 'destination']
         labels = {
-            "explanation": "If none of these solutions works for you, can you explain why?",
+            "explanation": "Feedback",
         }
         help_texts = {
-            "explanation": "Information about use cases helps us understand what portability and other interop features would be most helpful"
+            "explanation": """Information about use cases helps us understand and advocate for the portability features
+            and interoperability features that would be most helpful."""
         }
         widgets = {
             "explanation": forms.Textarea(attrs={"cols": 60, "rows": 4}),

@@ -26,6 +26,16 @@
         <button type="submit">{% translate "Find Article" %}</button>
     </form>
 
+    <hr>
+    <p>Can't see the option you're looking for? Please let us know below - or consider contributing at
+    <a href="https://github.com/dtinit/portability-articles">our content repository</a>!
+
+    <form method="post" action="usecase_feedback" id="multiple_option_feedback_form">
+        {% csrf_token %}
+        {{ use_case_form }}
+        <button type="submit">{% translate "Give Feedback" %}</button>
+    </form>
+
 </section>
 <script>
     const queryStructure = JSON.parse('{{ query_structure|safe }}');

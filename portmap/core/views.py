@@ -26,10 +26,10 @@ def ux_requires_post(function):
 
 def index(request):
     query_structure = Article.get_query_structure()
-    form = QueryIndexForm(data=None, datatypes=query_structure.keys())
-    return TemplateResponse(request,
-                            "core/index.html",
-                            {'form': form, 'query_structure': json.dumps(query_structure)})
+    query_form = QueryIndexForm(data=None, datatypes=query_structure.keys())
+    feedback_form = UseCaseFeedbackForm(data=None, datatype='None', source='', destination='')
+    context = {'form': query_form, 'query_structure': json.dumps(query_structure), 'use_case_form': feedback_form}
+    return TemplateResponse(request, "core/index.html", context)
 
 
 @login_required
@@ -107,7 +107,7 @@ def find_articles(request):
                                                        datatype=form.data['datatype'],
                                                        source=form.data['datasource'],
                                                        destination=form.data['datadest'])
-                context = {'articles': possible_articles, 'usecase_form': use_case_feedback}
+                context = {'articles': possible_articles, 'use_case_form': use_case_feedback}
                 return TemplateResponse(request, "core/article_list.html", context)
 
     else:
