@@ -17,10 +17,10 @@ The articles are organized by topic, data type, source and destination, and cach
 PostgreSQL DB.  The DB also captures query data so we can learn what users most need to find.
 
 Dependency management is by the process recommended in "Boost Your Django DX" and in Adam Johnson's
-blog posts: use pip, venv, and requirements.txt.
+blog posts: use pip, venv, and requirements.txt.  For dev requirements, also use pip to install ipython...
 
 PortMap's original project organization is from [Sidewinder](https://stribny.github.io/sidewinder), a django starter project template,
-which sets us up with:
+which set us up with:
 
 * environment variables (and the 'environ' package) instead of juggling multiple configuration files
 * Use HTMX for modern frontends

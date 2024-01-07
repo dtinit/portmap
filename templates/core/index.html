@@ -20,6 +20,14 @@
     portability solutions.  The library is currently sparsely populated so not all
     data types, sources or destinations of possible data transfers are listed here.</p>
 
+    <!-- LMDTODO: temp solution -->
+    <label>Current data and content types</label>
+    <div style="margin-bottom:10px;height:9em;overflow:scroll;font-style:italic;font-size:80%">
+        <dl>{% for datatype, help in datatype_help.items %}
+            <dt>{{ datatype }}</dt><dd>{{ help }}</dd>
+        {% endfor %}</dl>
+    </div>
+
     <form method="post" action="find_articles" id="query_form">
         {% csrf_token %}
         {{ form }}
