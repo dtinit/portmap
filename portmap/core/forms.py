@@ -30,8 +30,8 @@ class UpdateAccountForm(forms.ModelForm):
 
 class QueryIndexForm(forms.Form):
     data_type_choices = (('error', 'data missing'))
-    datatype = forms.ChoiceField(label="Data/Content Type", choices=data_type_choices)
-    datasource = forms.ChoiceField(label="Where the data is currently", choices=(()))
+    datatype = forms.ChoiceField(label="Select Type to transfer", choices=data_type_choices)
+    datasource = forms.ChoiceField(label="Current Location", choices=(()))
     datadest = forms.ChoiceField(label="Destination", choices=(()))
 
     def __init__(self, data, datatypes=None):
@@ -39,6 +39,7 @@ class QueryIndexForm(forms.Form):
         self.fields['datatype'].choices = [("", "Select an option")] + [(item, item) for item in datatypes]
         self.fields['datasource'].disabled = True
         self.fields['datadest'].disabled = True
+        self.label_suffix = ' '
 
 class ArticleFeedbackForm(forms.Form):
     CHOICES = [('happy', '<span>yes</span>'),

@@ -1,7 +1,8 @@
 import base64
 import requests
+import yaml
+from pathlib import Path
 from portmap.utils import extract_yaml_and_body
-from django.conf import settings
 from .models import Article
 from portmap.github_auth import get_github_auth_token
 
@@ -23,6 +24,7 @@ def get_content_files():
 
     return debug_articles_info
 
+
 class GithubClient:
     REPOSITORY_URL = "https://api.github.com/repos/dtinit/portability-articles"
 
@@ -36,12 +38,20 @@ class GithubClient:
 
         return response.json()
 
-    def get_article(self, name):
-        article = requests.get(f"{self.REPOSITORY_URL}/contents/articles/{name}", headers=self.headers)
+    def get_github_file_content(self, filepath):
+        article = requests.get(f"{self.REPOSITORY_URL}/contents/{filepath}", headers=self.headers)
         article_data = article.json()
         return base64.b64decode(bytearray(article_data["content"], "utf-8")).decode('utf-8')
+
+    def get_article(self, name):
+        return self.get_github_file_content(Path('articles') / name)
 
     def get_article_fields_table(self):
         debug_articles_info = self.get_article_list()
         for item in debug_articles_info:
             pass
+
+    def get_datatype_help(self):
+        raw_content = self.get_github_file_content('datatype-help.yaml')
+        return yaml.safe_load(raw_content)
+

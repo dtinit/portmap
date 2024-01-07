@@ -11,6 +11,7 @@ from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
 
+from .articles import GithubClient
 from .forms import UpdateAccountForm, QueryIndexForm, ArticleFeedbackForm, UseCaseFeedbackForm
 from .models import User, Article, Feedback, QueryLog, UseCaseFeedback
 
@@ -28,7 +29,11 @@ def index(request):
     query_structure = Article.get_query_structure()
     query_form = QueryIndexForm(data=None, datatypes=query_structure.keys())
     feedback_form = UseCaseFeedbackForm(data=None, datatype='None', source='', destination='')
-    context = {'form': query_form, 'query_structure': json.dumps(query_structure), 'use_case_form': feedback_form}
+    datatype_help = GithubClient().get_datatype_help()
+    context = {'form': query_form,
+               'query_structure': json.dumps(query_structure),
+               'use_case_form': feedback_form,
+               'datatype_help': datatype_help}
     return TemplateResponse(request, "core/index.html", context)
 
 
