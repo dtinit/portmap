@@ -6,7 +6,7 @@ Colors and other variables
   --font-family: Arial, sans-serif;
   --font-family-headline: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --color-text: rgb(29, 29, 29);
-  --color-primary: rgb(52, 54, 158);
+  --color-primary: rgb(82, 84, 188);
   --color-background: rgb(247, 247, 247);
   --color-link: rgb(52, 54, 158);
   --color-success: rgb(214, 250, 214);
@@ -158,7 +158,7 @@ input, textarea {
   padding: 0.3rem 0.75rem 0.3rem 0.75rem;
 }
 
-label, button[type=submit] {
+button[type=submit] {
   display: block;
 }
 
@@ -344,7 +344,11 @@ p {
   margin: 0 0 1.5em;
 }
 label {
-  font-size: var(--step-1)
+  font-size: var(--step-0);
+}
+
+p.tagline{
+  font-size: var(--step-2);
 }
 
 .endnote {
@@ -354,4 +358,34 @@ label {
 .helptext {
   font-size: var(--step--1);
   font-style: italic;
+}
+
+input + label.radiogrid {
+  background: #cccccc;
+  padding:5px;min-width: 150px;
+}
+
+input:hover + label.radiogrid {
+  background: #eeeeee;
+}
+
+input:checked + label.radiogrid {
+  background: var(--color-primary);
+  color: white;
+}
+
+.formstarthidden {
+  margin-bottom: 10px;
+}
+
+div#datatype_help_grid {
+  display:grid;
+  grid-template-columns:3fr 1fr;
+  margin-bottom:20px;"
+}
+
+div#datatype_radio_grid {
+  display:grid;
+  grid-template-columns: repeat(3,1fr);
+  grid-auto-rows:minmax(40px,auto);
 }

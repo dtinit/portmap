@@ -2,47 +2,74 @@
 {% load static %}
 {% load i18n %}
 {% block full_title %}{{ PROJECT_NAME }}{% endblock full_title %}
+{% block header %}
+<script src="https://unpkg.com/lucide@latest"></script>
+{% endblock header %}
 {% block content %}
 
 <section class="page page--wide">
     {% include "includes/messages.html" %}
+    <header><img style="float:left;max-width:300px;padding-right:20px;" src="https://dtinit.org/images/blog/Firefly-Train-Schedule.jpg"/>
     <h1>
-        Query the Portability Map
+        Data Portability Map
     </h1>
-
-    <p>
+    <p class="tagline">Find help articles about moving your digital stuff</p>
+    </header>
+    <p style="clear:both;padding-top:20px;">
     Do you need to move your online data to a new home?  It can be hard to find out
-    how to move data, and whether there are options or tradeoffs.
+    how to move data and what options and tradeoffs exist.
     </p>
 
     <p>The <a href="http://dtinit.org">Data Transfer Initiative</a> is interested in
     improving how you can move your own data, and offers a library of articles about
     portability solutions.  The library is currently sparsely populated so not all
-    data types, sources or destinations of possible data transfers are listed here.</p>
-
-    <!-- LMDTODO: temp solution -->
-    <label>Current data and content types</label>
-    <div style="margin-bottom:10px;height:9em;overflow:scroll;font-style:italic;font-size:80%">
-        <dl>{% for datatype, help in datatype_help.items %}
-            <dt>{{ datatype }}</dt><dd>{{ help }}</dd>
-        {% endfor %}</dl>
-    </div>
+    possible options are listed yet.</p>
 
     <form method="post" action="find_articles" id="query_form">
         {% csrf_token %}
-        {{ form }}
+        <div id="datatype_help_grid">
+            <div>
+                <p>Select kind of data to see what articles we have:</p>
+                <div id="datatype_radio_grid">
+                {% for datatype, help in datatype_help.items %}
+                    <div>
+                        <input style="display:none;" type="radio" name="datatype"
+                               id={{ datatype.split|join:"_" }} value='{{ datatype.split|join:"_" }}'
+                               title="{{ help }}">
+                        <label class='radiogrid' for="{{ datatype.split|join:"_" }}" title="{{ help }}">{{ datatype }}</label>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            <div id="help_text" style="font-style:italic;text-align: right;">
+
+            </div>
+        </div>
+        <div class="formstarthidden">
+            <label for="id_datasource">Where is it now?</label>
+            <select name="datasource" disabled id="id_datasource"></select>
+        </div>
+        <div class="formstarthidden">
+            <label for="id_datadest">Destination:</label>
+            <select name="datadest" disabled id="id_datadest"></select>
+        </div>
         <button type="submit">{% translate "Find Article" %}</button>
     </form>
 
+<div style="display:block;">
     <hr>
-    <p>Can't see the option you're looking for? Please let us know below - or consider contributing at
-    <a href="https://github.com/dtinit/portability-articles">our content repository</a>!
+    <p id="didnotfind">Can't see the option you're looking for? <i data-lucide="arrow-down-square"></i></p>
+</div>
+    <div id="askforarticle">
+    <p>Please let us know what we should add articles about - or consider contributing at
+        <a href="https://github.com/dtinit/portability-articles">our content repository</a>!</p>
 
     <form method="post" action="usecase_feedback" id="multiple_option_feedback_form">
         {% csrf_token %}
         {{ use_case_form }}
         <button type="submit">{% translate "Give Feedback" %}</button>
     </form>
+    </div>
 
 </section>
 <script>
@@ -51,5 +78,8 @@
 <script defer data-domain="portmap.dtinit.org" src="https://plausible.io/js/script.js"></script>
 
 <script src="{% static 'js/query_form.js' %}"></script>
+<script>
+  lucide.createIcons();
+</script>
 
 {% endblock content %}
