@@ -26,39 +26,77 @@ function setupDropdown(dropdownElement, possibleValues) {
 
 }
 
+function changeHelp(new_text) {
+  let help_text = document.getElementById('help_text');
+  help_text.innerText = new_text;
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
 
-  let typeDropdown = document.getElementById("id_datatype");
+  var hidden_form_items = document.getElementsByClassName('formstarthidden');
+  for (item of hidden_form_items) {
+    item.style.display = "none";
+  };
+
+
+  document.querySelectorAll("label.radiogrid").forEach(function(label) {
+    label.addEventListener("mouseover", function() {
+      // do something when the button is clicked
+      changeHelp(label.title);
+    });
+  });
+
+  let query_form = document.forms["query_form"];
   let sourceDropdown = document.getElementById("id_datasource");
   let destDropdown = document.getElementById("id_datadest");
 
-  if (!(typeDropdown && sourceDropdown && destDropdown)) {
-    console.error("Missing expected form elements - id_datatype, id_datasource and id_datadest");
+  function get_selected_datatype() {
+    let selected_radio_item = query_form.querySelector('input[name="datatype"]:checked');
+    return selected_radio_item === null ? null : selected_radio_item.value;
+  }
+
+  if (!(sourceDropdown && destDropdown)) {
+    console.error("Missing expected form elements - id_datasource and id_datadest");
     return;
   }
 
   function saveFormState() {
-    try {
-      sessionStorage.setItem('selectedType', typeDropdown.value);
-      sessionStorage.setItem('selectedSource', sourceDropdown.value);
-      sessionStorage.setItem('selectedDest', destDropdown.value);
-    } catch (e) {
-      console.log("Session storage not available; form contents may reset")
+    if(get_selected_datatype()) {
+      try {
+        sessionStorage.setItem('selectedType', get_selected_datatype());
+        sessionStorage.setItem('selectedSource', sourceDropdown.value);
+        sessionStorage.setItem('selectedDest', destDropdown.value);
+      } catch (e) {
+        console.log("Session storage not available; form contents may reset")
+      }
+
     }
   }
 
   // Add an event listener so that when the content type is chosen, a list of known sources is populated
   // for the next step
-  typeDropdown.addEventListener("change", function () {
-    saveFormState();
-    setupDropdown(sourceDropdown, Object.keys(queryStructure[typeDropdown.value]));
-    setupDropdown(destDropdown, []);
-  });
+  let last_datatype = null;
+  query_form.addEventListener("change", function() {
+    var hidden_form_items = document.getElementsByClassName('formstarthidden');
+    for (item of hidden_form_items) {
+        item.style.display = "block";
+    };
+    new_datatype = get_selected_datatype();
+    if(new_datatype != null && new_datatype != last_datatype) {
+      last_datatype = new_datatype;
+      datatype_lookup_key = new_datatype.replace(/_/g, ' ');
+      setupDropdown(sourceDropdown, Object.keys(queryStructure[datatype_lookup_key]));
+      setupDropdown(destDropdown, []);
+    };
+  })
+
 
   // Then when the source for data is chosen, a list of destinations
   sourceDropdown.addEventListener("change", function () {
     saveFormState();
-    setupDropdown(destDropdown, queryStructure[typeDropdown.value][sourceDropdown.value]);
+    datatype_lookup_key = get_selected_datatype().replace(/_/g, ' ');
+    setupDropdown(destDropdown, queryStructure[datatype_lookup_key][sourceDropdown.value]);
   });
 
   destDropdown.addEventListener('change', saveFormState);
@@ -67,9 +105,10 @@ document.addEventListener('DOMContentLoaded', function() {
   function restoreFormState() {
     try {
       let selectedType = sessionStorage.getItem('selectedType');
-      if (selectedType && selectedType !== typeDropdown.value) {
-          typeDropdown.value = selectedType;
-          setupDropdown(sourceDropdown, Object.keys(queryStructure[selectedType]));
+      if (selectedType) {
+        let todo_radio_item = query_form.querySelector('input[value=selectedType]');
+        todo_radio_item.select();
+        setupDropdown(sourceDropdown, Object.keys(queryStructure[selectedType]));
       }
       let selectedSource = sessionStorage.getItem('selectedSource');
       if (selectedSource && selectedSource !== sourceDropdown.value) {
@@ -87,4 +126,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Call this function when the page loads in case it loads from a "back" action
   restoreFormState();
+
+  let askForArticle = document.getElementById("askforarticle");
+  askForArticle.style.display='none';
+  let didNotFind = document.getElementById("didnotfind");
+  didNotFind.addEventListener('click', function() {
+      askForArticle.style.display='inline';
+
+  })
+
 });

@@ -30,10 +30,12 @@ def index(request):
     query_form = QueryIndexForm(data=None, datatypes=query_structure.keys())
     feedback_form = UseCaseFeedbackForm(data=None, datatype='None', source='', destination='')
     datatype_help = GithubClient().get_datatype_help()
+    datatype_help_cleaned = {datatype: f"{datatype}: {datatype_help.get(datatype, '')}" for datatype in query_structure.keys()}
     context = {'form': query_form,
                'query_structure': json.dumps(query_structure),
                'use_case_form': feedback_form,
-               'datatype_help': datatype_help}
+               'datatypes': query_structure.keys(),
+               'datatype_help': datatype_help_cleaned}
     return TemplateResponse(request, "core/index.html", context)
 
 
