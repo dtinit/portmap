@@ -53,7 +53,7 @@
             <label for="id_datadest">Destination:</label>
             <select name="datadest" disabled id="id_datadest"></select>
         </div>
-        <button type="submit">{% translate "Find Article" %}</button>
+        <button class='button' type="submit">{% translate "Find Article" %}</button>
     </form>
 
 <div style="display:block;">
@@ -67,7 +67,7 @@
     <form method="post" action="usecase_feedback" id="multiple_option_feedback_form">
         {% csrf_token %}
         {{ use_case_form }}
-        <button type="submit">{% translate "Give Feedback" %}</button>
+        <button class='button' type="submit">{% translate "Give Feedback" %}</button>
     </form>
     </div>
 

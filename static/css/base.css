@@ -3,16 +3,38 @@ Colors and other variables
 */
 
 :root {
-  --font-family: Arial, sans-serif;
+  --white: #fff;
+  --black: #000;
+  --transparent: rgba(255, 255, 255, 0);
+
+  --golden-yellow: #FFCE4B;
+  --orange: #F78F31;
+  --light-green: #EDFFF5;
+  --contrast-green: #3BB54A;
+  --logo-green: #0B9A33;
+
+  --background-gray: #F0F0F0;
+  --lighter-gray: #F4F4F4;
+  --dark-gray: #505050;
+
+  --blue: #0b8ce9;
+  --dark-blue: #2B5399;
+
+  --text-color: rgb(29, 29, 29);
+  --link-color: var(--logo-green);
+  --link-focus-color: var(--blue);
+  --header-color-primary: var(--black);
+
+  --font-family: "Roboto", sans-serif;
   --font-family-headline: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --color-text: rgb(29, 29, 29);
+  --color-text: var(--text-color);
   --color-primary: rgb(82, 84, 188);
-  --color-background: rgb(247, 247, 247);
-  --color-link: rgb(52, 54, 158);
+  --color-background: var(--background-gray);
+  --color-link: var(--logo-green);
   --color-success: rgb(214, 250, 214);
   --color-info: rgb(243, 238, 194);
-  --color-warning: rgb(243, 199, 77);
-  --color-danger: rgb(236, 143, 143);
+  --color-warning: var(--golden-yellow);
+  --color-danger: var(--orange);
   --color-required-label: red;
   --color-tr-background: white;
   --color-tr-alternate-background: rgb(248, 247, 247);
@@ -66,7 +88,7 @@ https://www.joshwcomeau.com/css/custom-css-reset/
 
 body {
   line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
+  display: grid;
 }
 
 img, picture, video, canvas, svg {
@@ -98,6 +120,7 @@ html {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-family-headline);
+  color: var(--header-color-primary);
   font-weight: 700;
 }
 
@@ -134,6 +157,16 @@ h6 {
   margin-bottom: var(--margin-bottom);
 }
 
+
+small {
+  font-size: 0.75rem;
+  line-height: 1.125rem;
+}
+
+strong {
+  font-weight: 500;
+}
+
 a, a:visited {
   color: var(--color-link);
 }
@@ -142,8 +175,6 @@ a, a:visited {
 
 input, textarea, button {
   border-radius: var(--border-radius);
-  -moz-border-radius: var(--border-radius);
-  -webkit-border-radius: var(--border-radius);
   border: var(--border);
 }
 
@@ -156,10 +187,6 @@ button:focus {
 
 input, textarea {
   padding: 0.3rem 0.75rem 0.3rem 0.75rem;
-}
-
-button[type=submit] {
-  display: block;
 }
 
 label {
@@ -191,16 +218,59 @@ form ul.errorlist.nonfield li {
   margin-bottom: var(--margin-bottom);
 }
 
-button {
-  padding: 0.3rem 0.75rem 0.3rem 0.75rem;
-  cursor: pointer;
-  color: white;
-  background-color: var(--color-primary);
-  border: 0;
+/* || BUTTONS AND LINKS */
+
+:where(a),
+.button-link {
+  color: var(--link-color);
+  &:hover, &:focus {
+    color: var(--link-focus-color);
+  }
 }
 
-button:hover {
-  background-image: linear-gradient(rgb(0 0 0/50%) 0 0);
+.button {
+  border-radius: 4px;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.6875rem;
+  padding-block: 12px;
+  padding-inline: 24px;
+  text-align: center;
+  &:is(a) {
+    display: inline-block;
+  }
+  &:not(.button-outline) {
+    background: var(--logo-green);
+    border: 2px solid transparent;
+    color: var(--white);
+    &:hover,
+    &:focus {
+      background-color: var(--transparent);
+      border: 2px solid var(--logo-green);
+      color: var(--logo-green);
+    }
+  }
+  &-outline {
+    background-color: var(--transparent);
+    border: 2px solid var(--logo-green);
+    color: var(--logo-green);
+    &:hover,
+    &:focus {
+      background-color: var(--logo-green);
+      color: var(--white);
+    }
+  }
+  &:is(a) {
+    text-decoration: none;
+  }
+}
+
+.button-link {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  padding: 0;
+  text-decoration: underline;
 }
 
 input[type="checkbox"] {
@@ -300,7 +370,7 @@ thead tr {
 .page {
   min-width: 270px;
   max-width: 600px;
-  width: calc(100%-20px);
+  width: calc(100% - 20px);
   margin-top: clamp(0px, 5%, 40px);
   margin-right: auto;
   margin-left: auto;
@@ -311,8 +381,6 @@ thead tr {
   padding-bottom: 2rem;
   background-color: white;
   border-radius: var(--border-radius);
-  -moz-border-radius: var(--border-radius);
-  -webkit-border-radius: var(--border-radius);
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
@@ -329,8 +397,6 @@ thead tr {
   margin-top: var(--margin-bottom);
   border: 1px solid var(--color-danger);
   border-radius: var(--border-radius);
-  -moz-border-radius: var(--border-radius);
-  -webkit-border-radius: var(--border-radius);
   padding: var(--padding-base);
 }
 
@@ -361,8 +427,11 @@ p.tagline{
 }
 
 input + label.radiogrid {
-  background: #cccccc;
-  padding:5px;min-width: 150px;
+  display: inline-block;
+  background: var(--lighter-gray);
+  padding-block:5px;
+  padding-inline: 8px;
+  min-width: 150px;
 }
 
 input:hover + label.radiogrid {
@@ -389,3 +458,4 @@ div#datatype_radio_grid {
   grid-template-columns: repeat(3,1fr);
   grid-auto-rows:minmax(40px,auto);
 }
+
