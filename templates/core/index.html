@@ -34,9 +34,8 @@
                 {% for datatype, help in datatype_help.items %}
                     <div>
                         <input style="display:none;" type="radio" name="datatype"
-                               id={{ datatype.split|join:"_" }} value='{{ datatype.split|join:"_" }}'
-                               title="{{ help }}">
-                        <label class='radiogrid' for="{{ datatype.split|join:"_" }}" title="{{ help }}">{{ datatype }}</label>
+                               id={{ datatype.split|join:"_" }} value='{{ datatype.split|join:"_" }}'>
+                        <label class='radiogrid with-tooltip' for="{{ datatype.split|join:"_" }}" data-text="{{ help }}">{{ datatype }}</label>
                     </div>
                 {% endfor %}
                 </div>
