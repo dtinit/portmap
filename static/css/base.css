@@ -213,8 +213,8 @@ textarea {
   padding: 0.3rem 0.75rem 0.3rem 0.75rem;
 }
 
-label {
-  margin-bottom: var(--margin-bottom-small);
+textarea {
+  width: 100%;
 }
 
 .required label:after {
@@ -459,10 +459,11 @@ input + label.radiogrid {
   background: var(--lighter-gray);
   padding-block: 5px;
   padding-inline: 8px;
-  min-width: 150px;
+  text-align: center;
   cursor: pointer;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
+  width: 100%;
 }
 
 input:hover + label.radiogrid {
@@ -479,15 +480,23 @@ input:checked + label.radiogrid {
 }
 
 div#datatype_help_grid {
-  display: grid;
-  grid-template-columns: 3fr 1fr;
   margin-bottom: 20px;
 }
 
 div#datatype_radio_grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: minmax(40px, auto);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 0.5rem;
+}
+
+.radiogrid-container {
+  min-width: 200px;
+}
+
+.datatype {
+  min-width: 100px;
 }
 
 .with-tooltip {
@@ -505,9 +514,10 @@ div#datatype_radio_grid {
   padding: 10px 15px;
   background: var(--dark-gray);
   color: #fff;
-  min-width: 200px;
+  min-width: 250px;
   font-size: var(--step--1);
   border-radius: var(--border-radius);
+  text-align: left;
 }
 
 /* The arrow */
@@ -525,4 +535,11 @@ div#datatype_radio_grid {
 .with-tooltip:hover::before,
 .with-tooltip:hover::after {
   display: block;
+}
+
+@media (max-width: 600px) {
+  .radiogrid-container,
+  label.radiogrid {
+    width: 100%;
+  }
 }

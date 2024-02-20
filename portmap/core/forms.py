@@ -61,7 +61,7 @@ class UseCaseFeedbackForm(forms.ModelForm):
             and interoperability features that would be most helpful."""
         }
         widgets = {
-            "explanation": forms.Textarea(attrs={"cols": 60, "rows": 4}),
+            "explanation": forms.Textarea(attrs={"cols": '', "rows": 4}),
             "datatype": forms.HiddenInput(),
             "source": forms.HiddenInput(),
             "destination": forms.HiddenInput()
