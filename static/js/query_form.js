@@ -1,28 +1,25 @@
+function createOptionElement(text, value = text) {
+  const element = document.createElement("option");
+  return Object.assign(element, { text, value });
+}
+
 // query_form.js handles populating the query form dropdowns on index.html,
 // as well as saving form state to session storage to smooth the user experience.
 // Dropdowns are filled based on selections so far, rather than show all options
 // some of which are invalid for the content type chosen.
-
-function setupDropdown(dropdownElement, possibleValues) {
-  dropdownElement.innerHTML = "";
-  let defaultOption = document.createElement("option");
-  defaultOption.text = "Select an option";
-  defaultOption.value = "";
-  dropdownElement.add(defaultOption, dropdownElement.options[0]);
-  dropdownElement.selectedIndex = 0;
-  let uniqueValues = [...new Set(possibleValues)];
-
-  if (uniqueValues.length > 0) {
-    uniqueValues.forEach((value) => {
-      const option = document.createElement("option");
-      option.text = value;
-      option.value = value;
-      dropdownElement.appendChild(option);
-    });
-    dropdownElement.disabled = false;
-  } else {
-    dropdownElement.disabled = true;
-  }
+function createDropdownValuesSetter({
+  dropdownElement,
+  placeholder = "Select an option",
+}) {
+  return function setDropdownValues(possibleValues) {
+    dropdownElement.innerHTML = "";
+    const uniqueValues = Array.from(new Set(possibleValues));
+    const optionElements = [createOptionElement(placeholder, "")].concat(
+      uniqueValues.map((value) => createOptionElement(value))
+    );
+    dropdownElement.append(...optionElements);
+    dropdownElement.disabled = uniqueValues.length === 0;
+  };
 }
 
 function changeHelp(new_text) {
@@ -40,6 +37,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const sourceDropdown = document.getElementById("id_datasource");
   const destDropdown = document.getElementById("id_datadest");
   const submitButton = document.getElementById("query-form-submit-button");
+  const setSourceValues = createDropdownValuesSetter({
+    dropdownElement: sourceDropdown,
+    placeholder: "Select a source",
+  });
+  const setDestinationValues = createDropdownValuesSetter({
+    dropdownElement: destDropdown,
+    placeholder: "Select a destination",
+  });
 
   function get_selected_datatype() {
     let selected_radio_item = query_form.querySelector(
@@ -79,11 +84,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (new_datatype != null && new_datatype != last_datatype) {
       last_datatype = new_datatype;
       datatype_lookup_key = new_datatype.replace(/_/g, " ");
-      setupDropdown(
-        sourceDropdown,
-        Object.keys(queryStructure[datatype_lookup_key])
-      );
-      setupDropdown(destDropdown, []);
+      setSourceValues(Object.keys(queryStructure[datatype_lookup_key]));
+      setDestinationValues([]);
       submitButton.removeAttribute("disabled");
     }
   });
@@ -92,8 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
   sourceDropdown.addEventListener("change", function () {
     saveFormState();
     datatype_lookup_key = get_selected_datatype().replace(/_/g, " ");
-    setupDropdown(
-      destDropdown,
+    setDestinationValues(
       queryStructure[datatype_lookup_key][sourceDropdown.value]
     );
   });
@@ -109,18 +110,12 @@ document.addEventListener("DOMContentLoaded", function () {
           "input[value=selectedType]"
         );
         todo_radio_item.select();
-        setupDropdown(
-          sourceDropdown,
-          Object.keys(queryStructure[selectedType])
-        );
+        setSourceValues(Object.keys(queryStructure[selectedType]));
       }
       let selectedSource = sessionStorage.getItem("selectedSource");
       if (selectedSource && selectedSource !== sourceDropdown.value) {
         sourceDropdown.value = selectedSource;
-        setupDropdown(
-          destDropdown,
-          queryStructure[selectedType][selectedSource]
-        );
+        setDestinationValues(queryStructure[selectedType][selectedSource]);
       }
       let selectedDest = sessionStorage.getItem("selectedDest");
       if (selectedDest && selectedDest !== destDropdown.value) {
