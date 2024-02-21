@@ -36,9 +36,10 @@ document.addEventListener("DOMContentLoaded", function () {
     item.style.display = "none";
   }
 
-  let query_form = document.forms["query_form"];
-  let sourceDropdown = document.getElementById("id_datasource");
-  let destDropdown = document.getElementById("id_datadest");
+  const query_form = document.forms["query_form"];
+  const sourceDropdown = document.getElementById("id_datasource");
+  const destDropdown = document.getElementById("id_datadest");
+  const submitButton = document.getElementById("query-form-submit-button");
 
   function get_selected_datatype() {
     let selected_radio_item = query_form.querySelector(
@@ -83,6 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
         Object.keys(queryStructure[datatype_lookup_key])
       );
       setupDropdown(destDropdown, []);
+      submitButton.removeAttribute("disabled");
     }
   });
 

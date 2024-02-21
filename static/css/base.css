@@ -293,6 +293,11 @@ form ul.errorlist.nonfield li {
   }
 }
 
+.button:disabled {
+  opacity: 0.6;
+  pointer-events: none; /* disable hovering, clicking, etc */
+}
+
 .button-link {
   background: none;
   border: none;
