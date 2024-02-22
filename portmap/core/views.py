@@ -26,18 +26,21 @@ def ux_requires_post(function):
     return _wrap_requires_post
 
 def index(request):
+    return TemplateResponse(request, "core/index.html", _get_index_context())
+
+def _get_index_context():
     query_structure = Article.get_query_structure()
     query_form = QueryIndexForm(data=None, datatypes=query_structure.keys())
     feedback_form = UseCaseFeedbackForm(data=None, datatype='None', source='', destination='')
     datatype_help = GithubClient().get_datatype_help()
     datatype_help_cleaned = {datatype: f"{datatype}: {datatype_help.get(datatype, '')}" for datatype in query_structure.keys()}
-    context = {'form': query_form,
+    
+    
+    return {'form': query_form,
                'query_structure': json.dumps(query_structure),
                'use_case_form': feedback_form,
                'datatypes': query_structure.keys(),
                'datatype_help': datatype_help_cleaned}
-    return TemplateResponse(request, "core/index.html", context)
-
 
 @login_required
 def user_settings(request):
@@ -51,14 +54,12 @@ def user_settings(request):
 
     return TemplateResponse(request, "core/settings.html", {"form": form})
 
-
 @login_required
 def delete_account(request):
     if request.method == "POST":
         user = request.user
         user.delete()
     return redirect("index")
-
 
 class LoginView(AllAuthLoginView):
     def get_context_data(self, **kwargs):
@@ -100,7 +101,12 @@ def find_articles(request):
     if request.method == "POST":
         # create a form instance and populate it with data from the request:
         form = QueryIndexForm(data=request.POST, datatypes=datatypes)
+        
         if form['datatype']:
+            if not form.data.get('datatype'):
+                form = QueryIndexForm(data=None, datatypes=datatypes)
+                return index(request)
+
             possible_articles = Article.objects.filter(datatype__contains=form.data['datatype'],
                                                        sources__contains=form.data['datasource'],
                                                        destinations__contains=form.data['datadest'])

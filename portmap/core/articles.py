@@ -54,4 +54,3 @@ class GithubClient:
     def get_datatype_help(self):
         raw_content = self.get_github_file_content('datatype-help.yaml')
         return yaml.safe_load(raw_content)
-

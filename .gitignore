@@ -164,3 +164,6 @@ cython_debug/
 # Node.js
 
 node_modules/
+
+# Ignore DSStore from MAC
+.DS_Store
