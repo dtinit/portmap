@@ -103,16 +103,20 @@ def find_articles(request):
         form = QueryIndexForm(data=request.POST, datatypes=datatypes)
         
         if form['datatype']:
+
             if not form.data.get('datatype'):
                 form = QueryIndexForm(data=None, datatypes=datatypes)
                 return index(request)
-
-            possible_articles = Article.objects.filter(datatype__contains=form.data['datatype'],
+            datatype_joined = " ".join(form.data['datatype'].split("_"))
+            possible_articles = Article.objects.filter(datatype__contains=datatype_joined,
                                                        sources__contains=form.data['datasource'],
                                                        destinations__contains=form.data['datadest'])
+            
             QueryLog.objects.create(datatype=form.data['datatype'],
                                     source=form.data['datasource'],
                                     destination=form.data['datadest'])
+            
+            
             if possible_articles.count() == 1:
                 return redirect(f"/articles/{possible_articles[0].name}", )
             else:

@@ -4,6 +4,7 @@
 // some of which are invalid for the content type chosen.
 
 function setupDropdown(dropdownElement, possibleValues) {
+  
   dropdownElement.innerHTML = "";
   let defaultOption = document.createElement("option");
   defaultOption.text = "Select an option";
@@ -31,6 +32,7 @@ function changeHelp(new_text) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+
   var hidden_form_items = document.getElementsByClassName("formstarthidden");
   for (item of hidden_form_items) {
     item.style.display = "none";
