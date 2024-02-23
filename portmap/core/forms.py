@@ -30,7 +30,7 @@ class UpdateAccountForm(forms.ModelForm):
 
 class QueryIndexForm(forms.Form):
     data_type_choices = (('error', 'data missing'))
-    datatype = forms.ChoiceField(label="Select Type to transfer", choices=data_type_choices)
+    datatype = forms.ChoiceField(label="Select Type to transfer", choices=data_type_choices, required=True)
     datasource = forms.ChoiceField(label="Current Location", choices=(()))
     datadest = forms.ChoiceField(label="Destination", choices=(()))
 

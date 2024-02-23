@@ -28,6 +28,7 @@ function changeHelp(new_text) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+
   var hidden_form_items = document.getElementsByClassName("formstarthidden");
   for (item of hidden_form_items) {
     item.style.display = "none";
