@@ -9,10 +9,22 @@ Mostly this is rough notes for my own (Lisa's) benefit, I should clean up at som
 DTI is running this on Google Cloud at present, using Google App Engine and Cloud SQL.
 
 I used these instructions: https://cloud.google.com/python/django/run
+
 * including the part about proxying to Cloud SQL so that commands to migrate the db could
 be run locally
 * deploying from a directory just for deploy means I have an .env file ready for deploy in that directory
 
+First time:
+
+* create a directory portmap-deploy
+* git clone the portmap project into it
+* copy the production .env file into it
+* copy the production key file (.pem file) into it
+* create a .gcloudignore file (TODO can include in project?) so as not to deploy .git files especially
+* get gcloud permissions for SQL, App Engine, 3 storage buckets, builds and service accounts
+* Run `gcloud config set project portability-map`
+
+To do a deploy
 '''
 cd portmap-deploy
 git pull origin main
