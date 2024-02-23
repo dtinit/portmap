@@ -293,6 +293,11 @@ form ul.errorlist.nonfield li {
   }
 }
 
+.button:disabled {
+  opacity: 0.6;
+  pointer-events: none; /* disable hovering, clicking, etc */
+}
+
 .button-link {
   background: none;
   border: none;
@@ -499,6 +504,12 @@ div#datatype_radio_grid {
   min-width: 100px;
 }
 
+.data-dropdowns {
+  display: flex;
+  gap: 0.3rem;
+  margin-bottom: var(--margin-bottom);
+}
+
 .with-tooltip {
   position: relative;
 }
@@ -537,9 +548,14 @@ div#datatype_radio_grid {
   display: block;
 }
 
+/* mobile styles */
 @media (max-width: 600px) {
   .radiogrid-container,
   label.radiogrid {
     width: 100%;
+  }
+
+  .data-dropdowns {
+    flex-direction: column;
   }
 }

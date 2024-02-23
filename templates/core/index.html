@@ -41,15 +41,17 @@
                 </div>
             </div>
         </div>
-        <div class="formstarthidden">
-            <label for="id_datasource">Where is it now?</label>
-            <select name="datasource" disabled id="id_datasource"></select>
+        <div class="data-dropdowns">
+            <div class="formstarthidden">
+                <label for="id_datasource">Transfer from</label>
+                <select name="datasource" disabled id="id_datasource" required></select>
+            </div>
+            <div class="formstarthidden">
+                <label for="id_datadest"> to</label>
+                <select name="datadest" disabled id="id_datadest"></select>
+            </div>
         </div>
-        <div class="formstarthidden">
-            <label for="id_datadest">Destination:</label>
-            <select name="datadest" disabled id="id_datadest"></select>
-        </div>
-        <button class='button' type="submit">{% translate "Find Article" %}</button>
+        <button class='button' type="submit" id="query-form-submit-button"disabled>{% translate "Find Article" %}</button>
     </form>
 
 <div style="display:block;">
