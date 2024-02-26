@@ -30,6 +30,7 @@ function safelyGetSessionStorageItem(key) {
     return sessionStorage.getItem(key);
   } catch (e) {
     console.error("Failed to get sessionStorage item", e);
+    return null;
   }
 }
 
@@ -103,8 +104,12 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   }
 
-  function restoreFormState() {
-    const datatype = getSelectedDatatype();
+  function restoreFormState(datatype) {
+    const typeRadioItem = query_form.querySelector(`input[value=${datatype}]`);
+    if (!typeRadioItem) {
+      return;
+    }
+    typeRadioItem.checked = true;
     populateSourceListForDatatype(datatype);
     const storedSource = safelyGetSessionStorageItem("selectedSource");
     if (!storedSource) {
@@ -132,9 +137,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // If there's a data type already selected (like after a refresh),
   // populate the dropdowns
-  let lastDatatype = getSelectedDatatype();
+  let lastDatatype =
+    getSelectedDatatype() || safelyGetSessionStorageItem("selectedType");
   if (lastDatatype) {
-    restoreFormState();
+    restoreFormState(lastDatatype);
   }
 
   // Add an event listener so that when the content type is chosen, a list of known sources is populated
@@ -144,6 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (newDatatype !== null && newDatatype !== lastDatatype) {
       lastDatatype = newDatatype;
       populateSourceListForDatatype(newDatatype);
+      safelySetSessionStorageItem("selectedType", newDatatype);
     }
   });
 
