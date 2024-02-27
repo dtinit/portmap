@@ -72,3 +72,16 @@ python -m pip install -r requirements.txt
 ```
 
 9. To populate your local database with articles from https://github.com/dtinit/portability-articles, go to https://localhost:8000/dj-admin and enter your superuser credentials from step 7. Click on "Articles" (under "Core"), and then press the "Populate Articles" button in the top right.
+
+### Frontend
+
+Frontend dev tools like ESLint are delivered via [npm](https://www.npmjs.com/), which is included with Node.js. To use the tools locally, you'll need to:
+
+1. Install [Node.js](https://nodejs.org).
+2. Run `npm install` wherever you cloned this repository to.
+
+#### Linting with ESLint
+
+You can run the linter by executing `npm run lint`. If there are no issues, there won't be any output.
+
+To get linting feedback right in your code editor, [check here](https://eslint.org/docs/latest/use/integrations) to find an ESLint integration or instructions for your editor. The configuration file is named [.eslintrc.json](.eslintrc.json), but your editor/integration will probably find it for you.
