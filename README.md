@@ -84,4 +84,10 @@ Frontend dev tools like ESLint are delivered via [npm](https://www.npmjs.com/), 
 
 You can run the linter by executing `npm run lint`. If there are no issues, there won't be any output.
 
-To get linting feedback right in your code editor, [check here](https://eslint.org/docs/latest/use/integrations) to find an ESLint integration or instructions for your editor. The configuration file is named [.eslintrc.json](.eslintrc.json), but your editor/integration will probably find it for you.
+To get linting feedback in your code editor, [check here](https://eslint.org/docs/latest/use/integrations) to find an ESLint integration or instructions for your editor. The configuration file is named [.eslintrc.json](.eslintrc.json), but your editor will probably find it for you.
+
+#### Formatting with Prettier
+
+You can format JavaScript and CSS files with `npm run format`.
+
+To enable formatting from your code editor, [check here](https://prettier.io/docs/en/editors) for instructions for your editor. The configuration file is named [.prettierrc](.prettierrc), but your editor will probably find it for you.
