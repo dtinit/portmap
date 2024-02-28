@@ -1,3 +1,5 @@
+/* global queryStructure */
+
 function createOptionElement(text, value = text) {
   const element = document.createElement("option");
   return Object.assign(element, { text, value });
@@ -54,9 +56,8 @@ function createDropdownValuesSetter({
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-
   var hidden_form_items = document.getElementsByClassName("formstarthidden");
-  for (item of hidden_form_items) {
+  for (let item of hidden_form_items) {
     item.style.display = "none";
   }
 
@@ -88,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function populateSourceListForDatatype(datatype) {
-    for (item of hidden_form_items) {
+    for (let item of hidden_form_items) {
       item.style.display = "block";
     }
     setSourceValues(getAvailableSourcesForDatatype(datatype));
