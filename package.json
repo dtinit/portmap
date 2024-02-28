@@ -10,7 +10,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint \"static/js/*.js\"",
-    "format": "prettier \"static/js\" \"static/css\""
+    "check-formatting": "prettier \"static/js\" \"static/css\" --check",
+    "format": "prettier \"static/js\" \"static/css\" --write"
   },
   "keywords": [],
   "author": "",
