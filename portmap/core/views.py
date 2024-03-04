@@ -34,8 +34,8 @@ def _get_index_context():
     feedback_form = UseCaseFeedbackForm(data=None, datatype='None', source='', destination='')
     datatype_help = GithubClient().get_datatype_help()
     datatype_help_cleaned = {datatype: f"{datatype}: {datatype_help.get(datatype, '')}" for datatype in query_structure.keys()}
-    
-    
+
+
     return {'form': query_form,
                'query_structure': json.dumps(query_structure),
                'use_case_form': feedback_form,
@@ -98,10 +98,10 @@ def display_article(request, article_name):
 
 def find_articles(request):
     datatypes = Article.datatypes()
-    if request.method == "POST":
+    if request.method == "GET":
         # create a form instance and populate it with data from the request:
-        form = QueryIndexForm(data=request.POST, datatypes=datatypes)
-        
+        form = QueryIndexForm(data=request.GET, datatypes=datatypes)
+
         if form['datatype']:
 
             if not form.data.get('datatype'):
@@ -111,12 +111,12 @@ def find_articles(request):
             possible_articles = Article.objects.filter(datatype__contains=datatype_joined,
                                                        sources__contains=form.data['datasource'],
                                                        destinations__contains=form.data['datadest'])
-            
+
             QueryLog.objects.create(datatype=form.data['datatype'],
                                     source=form.data['datasource'],
                                     destination=form.data['datadest'])
-            
-            
+
+
             if possible_articles.count() == 1:
                 return redirect(f"/articles/{possible_articles[0].name}", )
             else:
