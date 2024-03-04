@@ -25,8 +25,8 @@ Colors and other variables
   --link-focus-color: var(--blue);
   --header-color-primary: var(--black);
 
-  --font-family: "Roboto", sans-serif;
-  --font-family-headline: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-family: 'Roboto', sans-serif;
+  --font-family-headline: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --color-text: var(--text-color);
   --color-primary: rgb(82, 84, 188);
   --color-background: var(--background-gray);
@@ -218,13 +218,13 @@ textarea {
 }
 
 .required label:after {
-  content: " *";
+  content: ' *';
   color: var(--color-required-label);
 }
 
 input,
 textarea,
-button[type="submit"] {
+button[type='submit'] {
   margin-bottom: var(--margin-bottom);
 }
 
@@ -309,7 +309,7 @@ form ul.errorlist.nonfield li {
   text-decoration: underline;
 }
 
-input[type="checkbox"] {
+input[type='checkbox'] {
   display: inline-block;
   width: 1.15em;
   height: 1.15em;
@@ -320,11 +320,11 @@ input[type="checkbox"] {
   margin-bottom: var(--margin-bottom-small);
 }
 
-input[type="checkbox"]:focus {
+input[type='checkbox']:focus {
   outline: 0px;
 }
 
-input[type="checkbox"] + label {
+input[type='checkbox'] + label {
   display: inline-block;
   cursor: pointer;
   margin-bottom: var(--margin-bottom);
@@ -536,7 +536,7 @@ div#datatype_radio_grid {
 
 /* The arrow */
 .with-tooltip::after {
-  content: "";
+  content: '';
   display: none;
   position: absolute;
   left: 50%;

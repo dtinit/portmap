@@ -1,12 +1,12 @@
 /* global queryStructure */
 
 function createOptionElement(text, value = text) {
-  const element = document.createElement("option");
+  const element = document.createElement('option');
   return Object.assign(element, { text, value });
 }
 
 function getSourceDestinationMapForDatatype(datatype) {
-  return queryStructure && queryStructure[datatype.replace(/_/g, " ")];
+  return queryStructure && queryStructure[datatype.replace(/_/g, ' ')];
 }
 
 function getAvailableSourcesForDatatype(datatype) {
@@ -23,7 +23,7 @@ function safelySetSessionStorageItem(key, item) {
   try {
     sessionStorage.setItem(key, item);
   } catch (e) {
-    console.error("Failed to set sessionStorage item", e);
+    console.error('Failed to set sessionStorage item', e);
   }
 }
 
@@ -31,7 +31,7 @@ function safelyGetSessionStorageItem(key) {
   try {
     return sessionStorage.getItem(key);
   } catch (e) {
-    console.error("Failed to get sessionStorage item", e);
+    console.error('Failed to get sessionStorage item', e);
     return null;
   }
 }
@@ -42,12 +42,12 @@ function safelyGetSessionStorageItem(key) {
 // some of which are invalid for the content type chosen.
 function createDropdownValuesSetter({
   dropdownElement,
-  placeholder = "Select an option",
+  placeholder = 'Select an option',
 }) {
   return function setDropdownValues(possibleValues) {
-    dropdownElement.innerHTML = "";
+    dropdownElement.innerHTML = '';
     const uniqueValues = Array.from(new Set(possibleValues));
-    const optionElements = [createOptionElement(placeholder, "")].concat(
+    const optionElements = [createOptionElement(placeholder, '')].concat(
       uniqueValues.map((value) => createOptionElement(value))
     );
     dropdownElement.append(...optionElements);
@@ -55,23 +55,23 @@ function createDropdownValuesSetter({
   };
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  var hidden_form_items = document.getElementsByClassName("formstarthidden");
+document.addEventListener('DOMContentLoaded', function () {
+  var hidden_form_items = document.getElementsByClassName('formstarthidden');
   for (let item of hidden_form_items) {
-    item.style.display = "none";
+    item.style.display = 'none';
   }
 
-  const query_form = document.forms["query_form"];
-  const sourceDropdown = document.getElementById("id_datasource");
-  const destDropdown = document.getElementById("id_datadest");
-  const submitButton = document.getElementById("query-form-submit-button");
+  const query_form = document.forms['query_form'];
+  const sourceDropdown = document.getElementById('id_datasource');
+  const destDropdown = document.getElementById('id_datadest');
+  const submitButton = document.getElementById('query-form-submit-button');
   const setSourceValues = createDropdownValuesSetter({
     dropdownElement: sourceDropdown,
-    placeholder: "Select a source",
+    placeholder: 'Select a source',
   });
   const setDestinationValues = createDropdownValuesSetter({
     dropdownElement: destDropdown,
-    placeholder: "Select a destination",
+    placeholder: 'Select a destination',
   });
 
   function getSelectedDatatype() {
@@ -83,18 +83,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (!(sourceDropdown && destDropdown)) {
     console.error(
-      "Missing expected form elements - id_datasource and id_datadest"
+      'Missing expected form elements - id_datasource and id_datadest'
     );
     return;
   }
 
   function populateSourceListForDatatype(datatype) {
     for (let item of hidden_form_items) {
-      item.style.display = "block";
+      item.style.display = 'block';
     }
     setSourceValues(getAvailableSourcesForDatatype(datatype));
     setDestinationValues([]);
-    submitButton.removeAttribute("disabled");
+    submitButton.removeAttribute('disabled');
   }
 
   function populateDestinationListForSource(source) {
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     typeRadioItem.checked = true;
     populateSourceListForDatatype(datatype);
-    const storedSource = safelyGetSessionStorageItem("selectedSource");
+    const storedSource = safelyGetSessionStorageItem('selectedSource');
     if (!storedSource) {
       return;
     }
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     sourceDropdown.value = storedSource;
     populateDestinationListForSource(storedSource);
-    const storedDest = safelyGetSessionStorageItem("selectedDest");
+    const storedDest = safelyGetSessionStorageItem('selectedDest');
     if (!storedDest) {
       return;
     }
@@ -140,36 +140,36 @@ document.addEventListener("DOMContentLoaded", function () {
   // If there's a data type already selected (like after a refresh),
   // populate the dropdowns
   let lastDatatype =
-    getSelectedDatatype() || safelyGetSessionStorageItem("selectedType");
+    getSelectedDatatype() || safelyGetSessionStorageItem('selectedType');
   if (lastDatatype) {
     restoreFormState(lastDatatype);
   }
 
   // Add an event listener so that when the content type is chosen, a list of known sources is populated
   // for the next step
-  query_form.addEventListener("change", function () {
+  query_form.addEventListener('change', function () {
     const newDatatype = getSelectedDatatype();
     if (newDatatype !== null && newDatatype !== lastDatatype) {
       lastDatatype = newDatatype;
       populateSourceListForDatatype(newDatatype);
-      safelySetSessionStorageItem("selectedType", newDatatype);
+      safelySetSessionStorageItem('selectedType', newDatatype);
     }
   });
 
   // Then when the source for data is chosen, a list of destinations
-  sourceDropdown.addEventListener("change", function () {
+  sourceDropdown.addEventListener('change', function () {
     populateDestinationListForSource(sourceDropdown.value);
-    safelySetSessionStorageItem("selectedSource", sourceDropdown.value);
+    safelySetSessionStorageItem('selectedSource', sourceDropdown.value);
   });
 
-  destDropdown.addEventListener("change", function () {
-    safelySetSessionStorageItem("selectedDest", destDropdown.value);
+  destDropdown.addEventListener('change', function () {
+    safelySetSessionStorageItem('selectedDest', destDropdown.value);
   });
 
-  let askForArticle = document.getElementById("askforarticle");
-  askForArticle.style.display = "none";
-  let didNotFind = document.getElementById("didnotfind");
-  didNotFind.addEventListener("click", function () {
-    askForArticle.style.display = "inline";
+  let askForArticle = document.getElementById('askforarticle');
+  askForArticle.style.display = 'none';
+  let didNotFind = document.getElementById('didnotfind');
+  didNotFind.addEventListener('click', function () {
+    askForArticle.style.display = 'inline';
   });
 });
