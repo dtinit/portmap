@@ -5,10 +5,9 @@
 {% block content %}
 <section class="page page--wide">
     {% include "includes/messages.html" %}
-    <p>We found multiple articles with this query.</p>
     <table>
    <tr>
-       <th>Articles</th>
+       <th>{% if title %}{{title}}{% else %}Articles{% endif %}</th>
    </tr>
    {% for item in articles %}
        <tr>
@@ -16,6 +15,7 @@
        </tr>
    {% endfor %}
 </table>
+{% if use_case_form %}
 <hr>
     <p>If none of these solutions works for you, we'd love to learn why!</p>
     <form method="post" action="usecase_feedback" id="multiple_option_feedback_form">
@@ -23,5 +23,6 @@
         {{ use_case_form }}
         <button class="button button-outline" type="submit">{% translate "Give Feedback" %}</button>
     </form>
+{% endif %}
 </section>
 {% endblock content %}
