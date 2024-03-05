@@ -7,6 +7,7 @@
 {% block full_title %}{{ article.title }}{% endblock full_title %}
 {% block content %}
 <section class="page page--wide">
+    {% include "includes/nav-bar.html" %}
     {% include "includes/messages.html" %}
 
     {{ article_body_html }}

@@ -4,6 +4,7 @@
 {% block full_title %}{{ PROJECT_NAME }}{% endblock full_title %}
 {% block content %}
 <section class="page page--wide">
+    {% include "includes/nav-bar.html" with route="articles" %}
     {% include "includes/messages.html" %}
     <table>
    <tr>

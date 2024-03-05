@@ -413,7 +413,7 @@ thead tr {
   margin-bottom: 40px;
   padding-right: clamp(10px, 5%, 60px);
   padding-left: clamp(10px, 5%, 60px);
-  padding-top: clamp(10px, 5%, 60px);
+  padding-top: 15px;
   padding-bottom: 2rem;
   background-color: white;
   border-radius: var(--border-radius);
@@ -549,6 +549,27 @@ div#datatype_radio_grid {
 .with-tooltip:hover::before,
 .with-tooltip:hover::after {
   display: block;
+}
+
+.nav-bar {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--dark-gray);
+}
+
+.nav-bar a {
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: inherit;
+}
+
+.nav-bar a:hover,
+.nav-bar a.active {
+  color: var(--color-link);
 }
 
 /* mobile styles */
