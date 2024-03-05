@@ -93,7 +93,7 @@ def display_article(request, article_name):
                'article_body_html': html,
                'article_name': article_name,
                'reaction_form': ArticleFeedbackForm()}
-    return TemplateResponse(request, "core/article.html", context)
+    return TemplateResponse(request, "core/article.html", context, headers={'cache-control':'no-store'})
 
 
 def find_articles(request):
@@ -111,7 +111,7 @@ def find_articles(request):
                     'title': 'All articles',
                     'use_case_form': UseCaseFeedbackForm(data=None, datatype='None', source='', destination='')
                 }
-                return TemplateResponse(request, "core/article_list.html", context)
+                return TemplateResponse(request, "core/article_list.html", context, headers={'cache-control':'no-store'})
             datatype_joined = " ".join(form.data['datatype'].split("_"))
             possible_articles = Article.objects.filter(datatype__contains=datatype_joined,
                                                        sources__contains=form.data['datasource'],
@@ -123,14 +123,14 @@ def find_articles(request):
 
 
             if possible_articles.count() == 1:
-                return redirect(f"/articles/{possible_articles[0].name}", )
+                return redirect(f"/articles/{possible_articles[0].name}")
             else:
                 use_case_feedback= UseCaseFeedbackForm(data=None,
                                                        datatype=form.data['datatype'],
                                                        source=form.data['datasource'],
                                                        destination=form.data['datadest'])
-                context = {'articles': possible_articles, 'use_case_form': use_case_feedback, 'title': 'Relevant Articles'}
-                return TemplateResponse(request, "core/article_list.html", context)
+                context = {'articles': possible_articles, 'use_case_form': use_case_feedback}
+                return TemplateResponse(request, "core/article_list.html", context, headers={'cache-control':'no-store'})
 
     else:
         form = QueryIndexForm(data=None, datatypes=datatypes)
