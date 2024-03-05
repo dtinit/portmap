@@ -104,9 +104,14 @@ def find_articles(request):
 
         if form['datatype']:
 
+            # If a datatype wasn't specified, show a list of every article
             if not form.data.get('datatype'):
-                form = QueryIndexForm(data=None, datatypes=datatypes)
-                return index(request)
+                context = {
+                    'articles': Article.objects.order_by("title").all(),
+                    'title': 'All articles',
+                    'use_case_form': UseCaseFeedbackForm(data=None, datatype='None', source='', destination='')
+                }
+                return TemplateResponse(request, "core/article_list.html", context)
             datatype_joined = " ".join(form.data['datatype'].split("_"))
             possible_articles = Article.objects.filter(datatype__contains=datatype_joined,
                                                        sources__contains=form.data['datasource'],
@@ -124,7 +129,7 @@ def find_articles(request):
                                                        datatype=form.data['datatype'],
                                                        source=form.data['datasource'],
                                                        destination=form.data['datadest'])
-                context = {'articles': possible_articles, 'use_case_form': use_case_feedback}
+                context = {'articles': possible_articles, 'use_case_form': use_case_feedback, 'title': 'Relevant Articles'}
                 return TemplateResponse(request, "core/article_list.html", context)
 
     else:
