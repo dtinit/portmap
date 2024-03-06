@@ -42,6 +42,9 @@ def _get_index_context():
                'datatypes': query_structure.keys(),
                'datatype_help': datatype_help_cleaned}
 
+def about(request):
+    return TemplateResponse(request, "core/about.html")
+
 @login_required
 def user_settings(request):
     form = UpdateAccountForm(instance=request.user)

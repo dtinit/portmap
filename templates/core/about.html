@@ -1,0 +1,13 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load i18n %}
+{% block full_title %}{{ PROJECT_NAME }}{% endblock full_title %}
+{% block content %}
+<section class="page page--wide">
+    {% include "includes/nav-bar.html" with route="about" %}
+    {% include "includes/messages.html" %}
+    <h1>About</h1>
+    <p>This Web site was built and is maintained by <a href="https://dtinit.org">DTI</a> to promote gathering and sharing information about how users can transfer their own data between online services. This supports our mission of promoting portability in order to provide real options to users.</p>
+    <p>The content in this Web site belongs to the public. It's hosted in a <a href="https://github.com/dtinit/portability-articles">GitHub repository</a> under <a href="http://creativecommons.org/publicdomain/zero/1.0">Creative Commons license</a>. Contributions are welcome!</p>
+</section>
+{% endblock content %}
