@@ -58,10 +58,3 @@ class CustomUserAdmin(UserAdmin):
         "last_login",
     ]
 
-
-CustomUserAdmin.fieldsets += (
-    (
-        "Sign up details",
-        {"fields": ("terms_accepted_at", "marketing_list_accepted_at")},
-    ),
-)
