@@ -572,6 +572,51 @@ div#datatype_radio_grid {
   color: var(--color-link);
 }
 
+#id_reaction {
+  display: flex;
+  width: auto;
+  position: relative;
+}
+
+/* we're hiding the actual radio input */
+#id_reaction input[type='radio'] {
+  opacity: 0;
+  position: absolute;
+  bottom: -10px;
+}
+
+#id_reaction label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 1px solid #aaa;
+  cursor: pointer;
+}
+
+#id_reaction input[type='radio']:checked + label {
+  background: #eee;
+}
+
+#id_reaction > div:first-of-type input[type='radio']:checked + label {
+  color: var(--logo-green);
+}
+
+#id_reaction > div:last-of-type input[type='radio']:checked + label {
+  color: darkred;
+}
+
+#id_reaction > div:first-of-type label {
+  border-top-left-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
+}
+
+#id_reaction > div:last-of-type label {
+  border-top-right-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  border-left: 0;
+}
+
 /* mobile styles */
 @media (max-width: 600px) {
   .radiogrid-container,

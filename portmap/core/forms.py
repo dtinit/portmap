@@ -4,6 +4,8 @@ from django.forms.renderers import TemplatesSetting
 
 from .models import User, UseCaseFeedback
 
+class UnwrappedRadioSelect(forms.RadioSelect):
+    option_template_name = "forms/widgets/unwrapped_radio_option.html"
 
 class CustomFormRenderer(TemplatesSetting):
     form_template_name = "forms/custom.html"
@@ -42,9 +44,9 @@ class QueryIndexForm(forms.Form):
         self.label_suffix = ' '
 
 class ArticleFeedbackForm(forms.Form):
-    CHOICES = [('happy', '<span>yes</span>'),
-               ('sad', '<span>no</span>')]
-    reaction = forms.ChoiceField(label="Did this article help?", widget=forms.RadioSelect, choices=CHOICES)
+    CHOICES = [('happy', 'Yes'),
+               ('sad', 'No')]
+    reaction = forms.ChoiceField(label="Did this article help?", widget=UnwrappedRadioSelect, choices=CHOICES)
     explanation = forms.CharField(widget=forms.Textarea,
                                   required=False,
                                   label="What is your use case? What would make this article better?")

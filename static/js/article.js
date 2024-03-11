@@ -8,23 +8,32 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    let happyButton = document.getElementById('id_reaction_0');
-    let sadButton = document.getElementById('id_reaction_1');
+    const happyButton =
+      document.getElementById('id_reaction_0').nextElementSibling;
+    const sadButton =
+      document.getElementById('id_reaction_1').nextElementSibling;
 
-    happyButton.nextSibling.replaceWith(lucideElement('smile')); // replaces "yes" string with smily face
-    sadButton.nextSibling.replaceWith(lucideElement('frown')); // replaces "no" with frown
+    // replaces "yes" string with smily face
+    happyButton.innerHTML = '';
+    happyButton.appendChild(lucideElement('smile'));
+
+    // replaces "no" with frown
+    sadButton.innerHTML = '';
+    sadButton.appendChild(lucideElement('frown'));
 
     lucide.createIcons();
 
-    let explanationText = document.getElementById('id_explanation');
+    const explanationText = document.getElementById('id_explanation');
     explanationText.hidden = true;
-    let explanationLabel =
+    const explanationLabel =
       explanationText.parentElement.getElementsByTagName('label')[0];
     explanationLabel.style.visibility = 'hidden';
 
-    sadButton.addEventListener('change', function () {
-      explanationLabel.style.visibility = 'visible';
-      explanationText.hidden = false;
+    [happyButton, sadButton].forEach((button) => {
+      button.previousElementSibling.addEventListener('change', function () {
+        explanationLabel.style.visibility = 'visible';
+        explanationText.hidden = false;
+      });
     });
   });
 })();
