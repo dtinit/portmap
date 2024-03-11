@@ -4,6 +4,9 @@ from django.forms.renderers import TemplatesSetting
 
 from .models import User, UseCaseFeedback
 
+# The included RadioSelect widget wraps the input element inside of a label,
+# which makes it difficult to style the label based on the input's checked state.
+# This custom widget structures the label and input as siblings instead.
 class UnwrappedRadioSelect(forms.RadioSelect):
     option_template_name = "forms/widgets/unwrapped_radio_option.html"
 
