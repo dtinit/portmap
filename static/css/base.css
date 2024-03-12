@@ -302,11 +302,18 @@ form ul.errorlist.nonfield li {
 }
 
 .button-link {
+  cursor: pointer;
   background: none;
   border: none;
   font-size: 1rem;
   padding: 0;
   text-decoration: underline;
+}
+
+#didnotfind {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 input[type='checkbox'] {
