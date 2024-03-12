@@ -310,12 +310,6 @@ form ul.errorlist.nonfield li {
   text-decoration: underline;
 }
 
-#didnotfind {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
 input[type='checkbox'] {
   display: inline-block;
   width: 1.15em;
