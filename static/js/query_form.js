@@ -169,10 +169,11 @@
       safelySetSessionStorageItem('selectedDest', destDropdown.value);
     });
 
-    let askForArticle = document.getElementById('askforarticle');
+    const askForArticle = document.getElementById('askforarticle');
     askForArticle.style.display = 'none';
-    let didNotFind = document.getElementById('didnotfind');
+    const didNotFind = document.getElementById('didnotfind');
     didNotFind.addEventListener('click', function () {
+      didNotFind.remove();
       askForArticle.style.display = 'inline';
     });
   });
