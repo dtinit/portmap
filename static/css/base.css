@@ -13,7 +13,6 @@ Colors and other variables
   --contrast-green: #3bb54a;
   --logo-green: #0b9a33;
 
-  --background-gray: #f0f0f0;
   --lighter-gray: #f4f4f4;
   --dark-gray: #505050;
 
@@ -29,7 +28,7 @@ Colors and other variables
   --font-family-headline: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --color-text: var(--text-color);
   --color-primary: rgb(82, 84, 188);
-  --color-background: var(--background-gray);
+  --color-background: var(--white);
   --color-link: var(--logo-green);
   --color-success: rgb(214, 250, 214);
   --color-info: rgb(243, 238, 194);
@@ -416,9 +415,6 @@ thead tr {
   padding-left: clamp(10px, 5%, 60px);
   padding-top: 15px;
   padding-bottom: 2rem;
-  background-color: white;
-  border-radius: var(--border-radius);
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 .page--wide {
