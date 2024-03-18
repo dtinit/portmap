@@ -33,7 +33,7 @@ def _get_index_context():
     query_form = QueryIndexForm(data=None, datatypes=query_structure.keys())
     feedback_form = UseCaseFeedbackForm(data=None, datatype='None', source='', destination='')
     datatype_help = GithubClient().get_datatype_help()
-    datatype_help_cleaned = {datatype: f"{datatype}: {datatype_help.get(datatype, '')}" for datatype in query_structure.keys()}
+    datatype_help_cleaned = {datatype: f"{datatype_help.get(datatype, '')}" for datatype in query_structure.keys()}
 
 
     return {'form': query_form,
