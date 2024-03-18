@@ -341,15 +341,11 @@ table {
 
 th,
 td {
-  padding: var(--padding-base);
+  padding: var(--padding-base) 0;
 }
 
 tr {
   background-color: var(--color-tr-background);
-}
-
-tr:nth-child(even) td {
-  background-color: var(--color-tr-alternate-background);
 }
 
 thead tr {
