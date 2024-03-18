@@ -408,6 +408,7 @@ thead tr {
   margin-right: auto;
   margin-left: auto;
   margin-bottom: 40px;
+  min-height: 70vh;
 }
 
 .page--wide {
@@ -625,6 +626,11 @@ div#datatype_radio_grid {
 select {
   padding: calc(var(--padding-base) / 2);
   border-radius: var(--border-radius);
+}
+
+footer {
+  margin: 0 auto;
+  padding: 4rem 0 1rem;
 }
 
 /* mobile styles */
