@@ -484,7 +484,7 @@ input:checked + label.radiogrid {
   border: 2px solid var(--color-link);
   /* We're increasing the border by 1px but don't want the layout to shift,
    * so decrease the padding by 1px to make up for it */
-  padding: calc(0.5rem - 1px) calc(1rem - 1px);
+  padding: calc(inherit - 1px);
 }
 
 .radiogrid__title {
@@ -624,7 +624,7 @@ div#datatype_radio_grid {
 
 select {
   padding: calc(var(--padding-base) / 2) var(--padding-base);
-  border-radius: 10rem;
+  border-radius: 10rem; /* This just needs to be bigger than then height of any select
 }
 
 /* mobile styles */
