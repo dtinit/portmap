@@ -623,8 +623,8 @@ div#datatype_radio_grid {
 }
 
 select {
-  padding: calc(var(--padding-base) / 2) var(--padding-base);
-  border-radius: 10rem; /* This just needs to be bigger than then height of any select
+  padding: calc(var(--padding-base) / 2);
+  border-radius: var(--border-radius);
 }
 
 /* mobile styles */
