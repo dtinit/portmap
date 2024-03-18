@@ -407,14 +407,10 @@ thead tr {
   min-width: 270px;
   max-width: 600px;
   width: calc(100% - 20px);
-  margin-top: clamp(0px, 5%, 40px);
+  margin-top: 5px;
   margin-right: auto;
   margin-left: auto;
   margin-bottom: 40px;
-  padding-right: clamp(10px, 5%, 60px);
-  padding-left: clamp(10px, 5%, 60px);
-  padding-top: 15px;
-  padding-bottom: 2rem;
 }
 
 .page--wide {
@@ -431,6 +427,12 @@ thead tr {
   border: 1px solid var(--color-danger);
   border-radius: var(--border-radius);
   padding: var(--padding-base);
+}
+
+.hero-image {
+  float: left;
+  max-width: 300px;
+  padding-right: 20px;
 }
 
 /* Temp new stuff - some we might keep when we replace this base.css */
@@ -623,5 +625,12 @@ div#datatype_radio_grid {
 
   .data-dropdowns {
     flex-direction: column;
+  }
+
+  .hero-image {
+    max-width: none;
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
   }
 }
