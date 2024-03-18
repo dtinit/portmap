@@ -156,6 +156,7 @@
         lastDatatype = newDatatype;
         populateSourceListForDatatype(newDatatype);
         safelySetSessionStorageItem('selectedType', newDatatype);
+        sourceDropdown.scrollIntoView({ behavior: 'smooth' });
       }
     });
 
