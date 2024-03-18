@@ -33,11 +33,14 @@
                 <p>Select kind of data to see what articles we have:</p>
                 <div id="datatype_radio_grid">
                 {% for datatype, help in datatype_help.items %}
-                    <div class="radiogrid-container">
-                        <input style="display:none;" type="radio" name="datatype"
-                               id={{ datatype.split|join:"_" }} value='{{ datatype.split|join:"_" }}'>
-                        <label class='radiogrid with-tooltip' for="{{ datatype.split|join:"_" }}" data-text="{{ help }}">{{ datatype }}</label>
-                    </div>
+                    <input style="display:none;" type="radio" name="datatype"
+                             id={{ datatype.split|join:"_" }} value='{{ datatype.split|join:"_" }}'>
+                    <label
+                        class='radiogrid'
+                        for="{{ datatype.split|join:"_" }}">
+                        <div class="radiogrid__title">{{ datatype }}</div>
+                        <div class="radiogrid__help">{{ help }}</div>
+                    </label>
                 {% endfor %}
                 </div>
             </div>
