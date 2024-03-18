@@ -622,6 +622,11 @@ div#datatype_radio_grid {
   border-left: 0;
 }
 
+select {
+  padding: calc(var(--padding-base) / 2) var(--padding-base);
+  border-radius: 10rem;
+}
+
 /* mobile styles */
 @media (max-width: 600px) {
   label.radiogrid {
