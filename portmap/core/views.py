@@ -14,6 +14,7 @@ from django.utils.safestring import mark_safe
 from .articles import GithubClient
 from .forms import UpdateAccountForm, QueryIndexForm, ArticleFeedbackForm, UseCaseFeedbackForm
 from .models import User, Article, Feedback, QueryLog, UseCaseFeedback
+from portmap.slack import notify
 
 
 def ux_requires_post(function):
@@ -124,6 +125,12 @@ def find_articles(request):
                                     source=form.data['datasource'],
                                     destination=form.data['datadest'])
 
+            message = "*New query:* Transfer " + form.data['datatype'] + " from " + form.data['datasource']
+            if form.data['datadest']:
+                message += " to " + form.data['datadest']
+
+            notify(message)
+
 
             if possible_articles.count() == 1:
                 return redirect(f"/articles/{possible_articles[0].name}")
@@ -146,12 +153,19 @@ def article_feedback(request, article_name):
     Feedback.objects.create(article=Article.objects.get(name=article_name),
                             reaction=form.data['reaction'],
                             explanation=form.data['explanation'])
+    message = "*New article feedback for \"" + article_name + "\"*:\n\nReaction: " + form.data['reaction'] + "\n\n" + form.data['explanation']
+    notify(message)
     return TemplateResponse(request, "core/thankyou.html")
 
 
 @ux_requires_post
 def usecase_feedback(request):
-    UseCaseFeedbackForm(data=request.POST).save()
+    feedback = UseCaseFeedbackForm(data=request.POST);
+    if feedback.is_valid():
+        feedback.save()
+        message = "*New use case feedback:*\n\n" + feedback.data['explanation']
+        notify(message)
+
     return TemplateResponse(request, "core/thankyou.html")
 
 
