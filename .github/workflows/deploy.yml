@@ -4,11 +4,36 @@ on:
   workflow_dispatch
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: 'ubuntu-latest'
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: 'actions/checkout@v4'
 
-      - name: Say hello
-        run: echo Hello
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.11
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Collect static files
+        run: 'python3 manage.py collectstatic'
+
+      - uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: portability-map
+          workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+
+      - name: Set up Cloud SDK
+        uses: 'google-github-actions/setup/gcloud@v2'
+
+      - name: Deploy to Cloud Run
+        run: gcloud app deploy --project=portability-map
