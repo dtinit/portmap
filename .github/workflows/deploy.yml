@@ -35,5 +35,6 @@ jobs:
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup/gcloud@v2'
 
-      - name: Deploy to Cloud Run
-        run: gcloud app deploy --project=portability-map
+          # Let's not try to actually deploy just yet
+          #- name: Deploy to Cloud Run
+          #run: gcloud app deploy --project=portability-map
