@@ -48,6 +48,9 @@ jobs:
     - name: Setup Playwright
       run: playwright install
 
+    - name: Setup db
+      run: ./manage.py migrate
+
     - name: Start Django
       run: python manage.py runserver &
 
