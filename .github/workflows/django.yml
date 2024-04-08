@@ -46,17 +46,22 @@ jobs:
     - name: Copy environment variable file for CI
       run: cp .env-ci .env
 
-    - name: Setup Playwright
-      run: playwright install
-
     - name: Setup db
       run: ./manage.py migrate
 
     - name: Populate articles
       run: ./manage.py populate_articles
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Setup Playwright
+      run: playwright install
 
     - name: Start Django
-      run: python manage.py runserver &
+      run: ./manage.py runserver &
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
     - name: Run Tests
       run: pytest
