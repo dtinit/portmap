@@ -52,6 +52,9 @@ jobs:
     - name: Setup db
       run: ./manage.py migrate
 
+    - name: Populate articles
+      run: ./manage.py populate_articles
+
     - name: Start Django
       run: python manage.py runserver &
 
