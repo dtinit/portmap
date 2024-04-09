@@ -38,8 +38,11 @@
                     <label
                         class='radiogrid'
                         for="{{ datatype.split|join:"_" }}">
-                        <div class="radiogrid__title">{{ datatype }}</div>
-                        <div class="radiogrid__help">{{ help }}</div>
+                        <i data-lucide="volume-2" class="radiogrid__icon"></i>
+                        <div class="radiogrid__info">
+                            <div class="radiogrid__info__title">{{ datatype }}</div>
+                            <div class="radiogrid__info__help">{{ help }}</div>
+                        </div>
                     </label>
                 {% endfor %}
                 </div>
@@ -81,7 +84,7 @@
 
 <script src="{% static 'js/query_form.js' %}"></script>
 <script>
-  lucide.createIcons();
+ lucide.createIcons();
 </script>
 
 {% endblock content %}
