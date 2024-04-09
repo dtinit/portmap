@@ -5,6 +5,12 @@ from django.conf import settings
 import requests
 
 def get_github_auth_token():
+    # If a token was provided as an env var, use it
+    # (handy for use inside GitHub Actions)
+    if settings.GITHUB_TOKEN:
+        return settings.GITHUB_TOKEN
+
+    # Otherwise, fetch one
     headers = {"Authorization": f"Bearer {make_jwt_for_github()}"}
     response = requests.post("https://api.github.com/app/installations/43986164/access_tokens", headers=headers)
     return response.json()['token']
