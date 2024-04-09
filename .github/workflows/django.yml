@@ -21,7 +21,6 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: portmap
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -46,25 +45,12 @@ jobs:
     - name: Copy environment variable file for CI
       run: cp .env-ci .env
 
-    - name: Setup db
-      run: ./manage.py migrate
-
-    - name: Populate articles
-      run: ./manage.py populate_articles
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Setup Playwright
       run: playwright install
 
-    - name: Start Django
-      run: ./manage.py runserver &
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
     - name: Run Tests
       run: pytest
-
-    - name: Stop Django
-      run: ps aux | grep 'runserver' | awk '{print $2}' | xargs kill -9
+      env:
+        # This is provided by GitHub Actions.
+        # We use it to make authenticated API requests in our app.
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
