@@ -30,10 +30,13 @@ jobs:
       - uses: 'google-github-actions/auth@v2'
         with:
           project_id: portability-map
-          service_account: '977913795008-compute@developer.gserviceaccount.com'
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: Test gcloud CLI
+        run: 'gcloud info'
 
           # Let's not try to actually deploy just yet
           #- name: Deploy to Cloud Run
