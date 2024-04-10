@@ -16,6 +16,21 @@ from .forms import UpdateAccountForm, QueryIndexForm, ArticleFeedbackForm, UseCa
 from .models import User, Article, Feedback, QueryLog, UseCaseFeedback
 from portmap.slack import notify
 
+# Specify lucide icon names for each datatype.
+# If there's no match, FALLBACK will be used.
+# New datatypes should have icons added.
+datatype_icon_map = {
+    'Book History': 'library-big',
+    'Contacts': 'contact',
+    'Newsletter': 'send',
+    'Notes': 'notebook-pen',
+    'Photos': 'images',
+    'Playlists': 'list-music',
+    'Tasks': 'list-checks',
+    'Text Social Media': 'message-square-heart',
+    'Videos': 'video',
+    'FALLBACK': 'file'
+}
 
 def ux_requires_post(function):
     @wraps(function)
@@ -34,14 +49,22 @@ def _get_index_context():
     query_form = QueryIndexForm(data=None, datatypes=query_structure.keys())
     feedback_form = UseCaseFeedbackForm(data=None, datatype='None', source='', destination='')
     datatype_help = GithubClient().get_datatype_help()
-    datatype_help_cleaned = {datatype: f"{datatype_help.get(datatype, '')}" for datatype in query_structure.keys()}
 
+    def create_datatype(name):
+        return {
+            'id': '_'.join(name.split()),
+            'name': name,
+            'help': datatype_help.get(name, ''),
+            'icon': datatype_icon_map[name] if name in datatype_icon_map else datatype_icon_map['FALLBACK']
+        }
+
+    datatypes = map(create_datatype, query_structure.keys())
 
     return {'form': query_form,
                'query_structure': json.dumps(query_structure),
                'use_case_form': feedback_form,
-               'datatypes': query_structure.keys(),
-               'datatype_help': datatype_help_cleaned}
+                'datatypes': datatypes
+            }
 
 def about(request):
     return TemplateResponse(request, "core/about.html")
