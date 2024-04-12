@@ -17,6 +17,7 @@ from .forms import UpdateAccountForm, QueryIndexForm, ArticleFeedbackForm, UseCa
 from .models import User, Article, Feedback, QueryLog, UseCaseFeedback
 from portmap.slack import notify
 
+
 # Account related functions
 class LoginView(AllAuthLoginView):
     def get_context_data(self, **kwargs):
@@ -26,6 +27,59 @@ class LoginView(AllAuthLoginView):
             context["all_users"] = User.objects.all()
         return context
     
+# Specify lucide icon names for each datatype.
+# If there's no match, FALLBACK will be used.
+# New datatypes should have icons added.
+datatype_icon_map = {
+    'Book History': 'library-big',
+    'Contacts': 'contact',
+    'Newsletter': 'send',
+    'Notes': 'notebook-pen',
+    'Photos': 'images',
+    'Playlists': 'list-music',
+    'Tasks': 'list-checks',
+    'Text Social Media': 'message-square-heart',
+    'Videos': 'video',
+    'FALLBACK': 'file'
+}
+
+def ux_requires_post(function):
+    @wraps(function)
+    def _wrap_requires_post(request, *args, **kwargs):
+        if request.method == "POST":
+            return function(request, *args, **kwargs)
+        messages.success(request, "Page not GETtable, returning home")
+        return redirect("index")
+    return _wrap_requires_post
+
+def index(request):
+    return TemplateResponse(request, "core/index.html", _get_index_context())
+
+def _get_index_context():
+    query_structure = Article.get_query_structure()
+    query_form = QueryIndexForm(data=None, datatypes=query_structure.keys())
+    feedback_form = UseCaseFeedbackForm(data=None, datatype='None', source='', destination='')
+    datatype_help = GithubClient().get_datatype_help()
+
+    def create_datatype(name):
+        return {
+            'id': '_'.join(name.split()),
+            'name': name,
+            'help': datatype_help.get(name, ''),
+            'icon': datatype_icon_map[name] if name in datatype_icon_map else datatype_icon_map['FALLBACK']
+        }
+
+    datatypes = map(create_datatype, query_structure.keys())
+
+    return {'form': query_form,
+               'query_structure': json.dumps(query_structure),
+               'use_case_form': feedback_form,
+                'datatypes': datatypes
+            }
+
+def about(request):
+    return TemplateResponse(request, "core/about.html")
+
 @login_required
 def user_settings(request):
     form = UpdateAccountForm(instance=request.user)
