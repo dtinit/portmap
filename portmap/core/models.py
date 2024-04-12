@@ -88,3 +88,7 @@ class QueryLog(BaseModel):
     datatype = models.CharField(max_length=30)
     source = models.TextField(max_length=100)
     destination = models.TextField(max_length=100)
+
+class TrackArticleView(BaseModel):
+    article = models.CharField(max_length=100)
+    user_meta_data = models.JSONField()
