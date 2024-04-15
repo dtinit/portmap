@@ -24,12 +24,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Copy environment variable file for CI
+      - name: Create .env with production values
         run: |
-          cp .env-ci .env
-
-      - name: Collect static files
-        run: 'python3 manage.py collectstatic'
+          ${{ secrets.PROD_ENV_VARS }} > .env
 
       - uses: 'google-github-actions/auth@v2'
         with:
@@ -39,9 +36,29 @@ jobs:
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v2'
 
+      - name: Download and run the Cloud SQL Auth Proxy
+        run: |
+          curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.10.1/cloud-sql-proxy.linux.amd64
+          chmod +x cloud-sql-proxy
+          ./cloud-sql-proxy --address 0.0.0.0 --port 1234 ${{ secrets.CLOUD_SQL_ICN }} &
+
+      - name: Run migrations
+        env:
+          DJ_DATABASE_CONN_STRING: postgres://${{ secrets.POSTRGES_CREDENTIALS }}@localhost:1234/portmap
+        run: |
+          python3 manage.py migrate
+
+      - name: Stop Cloud SQL Auth Proxy
+        run: pkill cloud-sql-proxy
+
+      - name: Collect static files
+        run: python3 manage.py collectstatic
+
       - name: Test gcloud CLI
         run: 'gcloud info'
 
           # Let's not try to actually deploy just yet
           #- name: Deploy to Cloud Run
           #run: gcloud app deploy --project=portability-map
+          #
+
