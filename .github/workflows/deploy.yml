@@ -44,7 +44,7 @@ jobs:
 
       - name: Run migrations
         env:
-          DJ_DATABASE_CONN_STRING: "postgres://${{ secrets.POSTRGES_CREDENTIALS }}@localhost:1234/portmap"
+          DJ_DATABASE_CONN_STRING: postgres://${{ secrets.POSTGRES_CREDENTIALS }}@localhost:1234/portmap
         run: |
           python3 manage.py migrate
 
