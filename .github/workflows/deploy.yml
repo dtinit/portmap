@@ -28,6 +28,10 @@ jobs:
         run: |
           printf "%s" "${{ secrets.PROD_ENV_VARS }}" > .env
 
+      - name: Create private key file for GitHub API interactions
+        run: |
+          printf "%s" "${{ secrets.GH_API_PRIVATE_KEY_FILE }}" > portability-map.2023-11-08.private-key.pem
+
       - uses: 'google-github-actions/auth@v2'
         with:
           project_id: portability-map
