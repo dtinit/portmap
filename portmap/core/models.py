@@ -65,7 +65,7 @@ class Article(BaseModel):
 
     def destination_list(self):
         return self.destinations.split(',')
-    
+
     def view_count(self):
         TrackArticleView.objects.filter(article = self)
 
@@ -97,3 +97,7 @@ class TrackArticleView(BaseModel):
     article_path = models.CharField(max_length=100)
     visited_directly = models.BooleanField(default=False)
     external_referrer = models.URLField(null=True, blank=True)
+
+class DataType(BaseModel):
+    name = models.CharField(max_length=30)
+    helpText = models.TextField(max_length=120)
