@@ -5,8 +5,6 @@ from .models import TrackArticleView
 def track_view(function):
     @wraps(function)
     def _wrap_track_view(request, *args, **kwargs):
-        print("Tracking: " + request.path)
-
         # Get event properties for tracking the view
         article_path = request.path
         allowed_attr = ['HTTP_ACCEPT','HTTP_ACCEPT_ENCODING','HTTP_HOST','HTTP_REFERER','HTTP_USER_AGENT','QUERY_STRING','REQUEST_METHOD']

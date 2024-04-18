@@ -90,5 +90,4 @@ class QueryLog(BaseModel):
     destination = models.TextField(max_length=100)
 
 class TrackArticleView(BaseModel):
-    article = models.CharField(max_length=100)
-    user_meta_data = models.JSONField()
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
