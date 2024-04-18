@@ -10,23 +10,12 @@ from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
-from portmap.core.track import track_view
-
 from .articles import GithubClient
 from .forms import UpdateAccountForm, QueryIndexForm, ArticleFeedbackForm, UseCaseFeedbackForm
 from .models import User, Article, Feedback, QueryLog, UseCaseFeedback
 from portmap.slack import notify
+from .track import track_view
 
-
-# Account related functions
-class LoginView(AllAuthLoginView):
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        if settings.DEBUG:
-            context["all_users"] = User.objects.all()
-        return context
-    
 # Specify lucide icon names for each datatype.
 # If there's no match, FALLBACK will be used.
 # New datatypes should have icons added.
@@ -79,7 +68,7 @@ def _get_index_context():
 
 def about(request):
     return TemplateResponse(request, "core/about.html")
-
+    
 @login_required
 def user_settings(request):
     form = UpdateAccountForm(instance=request.user)
@@ -99,35 +88,41 @@ def delete_account(request):
         user.delete()
     return redirect("index")
 
-# Article related functions
-def ux_requires_post(function):
-    @wraps(function)
-    def _wrap_requires_post(request, *args, **kwargs):
-        if request.method == "POST":
-            return function(request, *args, **kwargs)
-        messages.success(request, "Page not GETtable, returning home")
-        return redirect("index")
-    return _wrap_requires_post
+class LoginView(AllAuthLoginView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-@ux_requires_post
-def article_feedback(request, article_name):
-    form = ArticleFeedbackForm(data=request.POST)
-    Feedback.objects.create(article=Article.objects.get(name=article_name),
-                            reaction=form.data['reaction'],
-                            explanation=form.data['explanation'])
-    message = "*New article feedback for \"" + article_name + "\"*:\n\nReaction: " + form.data['reaction'] + "\n\n" + form.data['explanation']
-    notify(message)
-    return TemplateResponse(request, "core/thankyou.html")
+        if settings.DEBUG:
+            context["all_users"] = User.objects.all()
 
-@ux_requires_post
-def usecase_feedback(request):
-    feedback = UseCaseFeedbackForm(data=request.POST);
-    if feedback.is_valid():
-        feedback.save()
-        message = "*New use case feedback:*\n\n" + feedback.data['explanation']
-        notify(message)
+        return context
 
-    return TemplateResponse(request, "core/thankyou.html")
+
+def login_as_user(request):
+    if not settings.DEBUG or request.method != "POST":
+        raise Http404
+
+    from django.contrib.auth import login
+
+    as_user = User.objects.get(pk=int(request.POST.get("select_user")))
+    backend = settings.AUTHENTICATION_BACKENDS[0]
+
+    login(request, as_user, backend)
+
+    messages.success(request, _("Successfully signed in as ") + str(as_user))
+    return redirect("index")
+
+
+def display_article(request, article_name):
+    article = Article.objects.get(name=article_name)
+    html = mark_safe(markdown.markdown(article.body))
+    context = {'article': article,
+               'article_body_html': html,
+               'article_name': article_name,
+               'reaction_form': ArticleFeedbackForm()}
+    track_view(request, article)
+    return TemplateResponse(request, "core/article.html", context, headers={'cache-control':'no-store'})
+
 
 def find_articles(request):
     datatypes = Article.datatypes()
@@ -175,56 +170,35 @@ def find_articles(request):
         form = QueryIndexForm(data=None, datatypes=datatypes)
         return TemplateResponse(request, "core/index.html", {'form': form, 'datatypes': datatypes})
 
-# Core related functions
-def index(request):
-    return TemplateResponse(request, "core/index.html", _get_index_context())
 
-def about(request):
-    return TemplateResponse(request, "core/about.html")
-
-def _get_index_context():
-    query_structure = Article.get_query_structure()
-    query_form = QueryIndexForm(data=None, datatypes=query_structure.keys())
-    feedback_form = UseCaseFeedbackForm(data=None, datatype='None', source='', destination='')
-    datatype_help = GithubClient().get_datatype_help()
-    datatype_help_cleaned = {datatype: f"{datatype_help.get(datatype, '')}" for datatype in query_structure.keys()}
+@ux_requires_post
+def article_feedback(request, article_name):
+    form = ArticleFeedbackForm(data=request.POST)
+    Feedback.objects.create(article=Article.objects.get(name=article_name),
+                            reaction=form.data['reaction'],
+                            explanation=form.data['explanation'])
+    message = "*New article feedback for \"" + article_name + "\"*:\n\nReaction: " + form.data['reaction'] + "\n\n" + form.data['explanation']
+    notify(message)
+    return TemplateResponse(request, "core/thankyou.html")
 
 
-    return {'form': query_form,
-               'query_structure': json.dumps(query_structure),
-               'use_case_form': feedback_form,
-               'datatypes': query_structure.keys(),
-               'datatype_help': datatype_help_cleaned}
+@ux_requires_post
+def usecase_feedback(request):
+    feedback = UseCaseFeedbackForm(data=request.POST);
+    if feedback.is_valid():
+        feedback.save()
+        message = "*New use case feedback:*\n\n" + feedback.data['explanation']
+        notify(message)
 
-def login_as_user(request):
-    if not settings.DEBUG or request.method != "POST":
-        raise Http404
+    return TemplateResponse(request, "core/thankyou.html")
 
-    from django.contrib.auth import login
-
-    as_user = User.objects.get(pk=int(request.POST.get("select_user")))
-    backend = settings.AUTHENTICATION_BACKENDS[0]
-
-    login(request, as_user, backend)
-
-    messages.success(request, _("Successfully signed in as ") + str(as_user))
-    return redirect("index")
-
-@track_view
-def display_article(request, article_name):
-    article = Article.objects.get(name=article_name)
-    html = mark_safe(markdown.markdown(article.body))
-    context = {'article': article,
-               'article_body_html': html,
-               'article_name': article_name,
-               'reaction_form': ArticleFeedbackForm()}
-    return TemplateResponse(request, "core/article.html", context, headers={'cache-control':'no-store'})
 
 def debug_list_articles(request):
     if not settings.DEBUG:
         raise Http404
     articles = Article.objects.all()
     return TemplateResponse(request, "core/debug_article_list.html", {"articles": articles})
+
 
 def debug_help_dev(request):
     return TemplateResponse(request, "core/debug_index.html")
