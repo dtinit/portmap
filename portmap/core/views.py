@@ -10,11 +10,11 @@ from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
-
 from .articles import GithubClient
 from .forms import UpdateAccountForm, QueryIndexForm, ArticleFeedbackForm, UseCaseFeedbackForm
 from .models import User, Article, Feedback, QueryLog, UseCaseFeedback
 from portmap.slack import notify
+from .track import track_view
 
 # Specify lucide icon names for each datatype.
 # If there's no match, FALLBACK will be used.
@@ -68,7 +68,7 @@ def _get_index_context():
 
 def about(request):
     return TemplateResponse(request, "core/about.html")
-
+    
 @login_required
 def user_settings(request):
     form = UpdateAccountForm(instance=request.user)
@@ -120,6 +120,7 @@ def display_article(request, article_name):
                'article_body_html': html,
                'article_name': article_name,
                'reaction_form': ArticleFeedbackForm()}
+    track_view(request, article)
     return TemplateResponse(request, "core/article.html", context, headers={'cache-control':'no-store'})
 
 

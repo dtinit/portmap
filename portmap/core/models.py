@@ -65,6 +65,9 @@ class Article(BaseModel):
 
     def destination_list(self):
         return self.destinations.split(',')
+    
+    def view_count(self):
+        TrackArticleView.objects.filter(article = self)
 
 class Feedback(BaseModel):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
@@ -88,3 +91,9 @@ class QueryLog(BaseModel):
     datatype = models.CharField(max_length=30)
     source = models.TextField(max_length=100)
     destination = models.TextField(max_length=100)
+
+class TrackArticleView(BaseModel):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    article_path = models.CharField(max_length=100)
+    visited_directly = models.BooleanField(default=False)
+    external_referrer = models.URLField(null=True, blank=True)
