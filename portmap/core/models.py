@@ -96,4 +96,4 @@ class TrackArticleView(BaseModel):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     article_path = models.CharField(max_length=100)
     visited_directly = models.BooleanField(default=False)
-    external_referrer = models.URLField(blank=True)
+    external_referrer = models.URLField(null=True, blank=True)
