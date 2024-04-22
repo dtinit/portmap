@@ -10,9 +10,8 @@ from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
-from .articles import GithubClient
 from .forms import UpdateAccountForm, QueryIndexForm, ArticleFeedbackForm, UseCaseFeedbackForm
-from .models import User, Article, Feedback, QueryLog, UseCaseFeedback
+from .models import User, Article, Feedback, QueryLog, UseCaseFeedback, DataType
 from portmap.slack import notify
 from .track import track_view
 
@@ -48,17 +47,17 @@ def _get_index_context():
     query_structure = Article.get_query_structure()
     query_form = QueryIndexForm(data=None, datatypes=query_structure.keys())
     feedback_form = UseCaseFeedbackForm(data=None, datatype='None', source='', destination='')
-    datatype_help = GithubClient().get_datatype_help()
 
-    def create_datatype(name):
+    def create_datatype(datatype_object):
+        name = datatype_object.name
         return {
             'id': '_'.join(name.split()),
             'name': name,
-            'help': datatype_help.get(name, ''),
+            'help': datatype_object.helpText,
             'icon': datatype_icon_map[name] if name in datatype_icon_map else datatype_icon_map['FALLBACK']
         }
 
-    datatypes = map(create_datatype, query_structure.keys())
+    datatypes = map(create_datatype, DataType.objects.all())
 
     return {'form': query_form,
                'query_structure': json.dumps(query_structure),
@@ -68,7 +67,7 @@ def _get_index_context():
 
 def about(request):
     return TemplateResponse(request, "core/about.html")
-    
+
 @login_required
 def user_settings(request):
     form = UpdateAccountForm(instance=request.user)

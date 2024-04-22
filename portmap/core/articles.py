@@ -4,7 +4,7 @@ import yaml
 import logging
 from pathlib import Path
 from portmap.utils import extract_yaml_and_body
-from .models import Article
+from .models import Article, DataType
 from portmap.github_auth import get_github_auth_token
 
 
@@ -12,6 +12,11 @@ def get_content_files():
     debug_articles_info = []
     gh = GithubClient()
     try:
+        datatype_help = gh.get_datatype_help()
+        for datatype_name in gh.get_datatype_help():
+            helpText = datatype_help.get(datatype_name)
+            DataType.objects.update_or_create(name=datatype_name, helpText=helpText)
+
         for article_item in gh.get_article_list():
             try:
                 article_content = gh.get_article(article_item['name'])
