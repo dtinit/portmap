@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0006_alter_usecasefeedback_destination_and_more'),
+        ('core', '0007_trackarticleview'),
     ]
 
     operations = [
