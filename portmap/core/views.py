@@ -10,6 +10,7 @@ from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
+from django.views.decorators.cache import cache_control
 from .forms import UpdateAccountForm, QueryIndexForm, ArticleFeedbackForm, UseCaseFeedbackForm
 from .models import User, Article, Feedback, QueryLog, UseCaseFeedback, DataType
 from portmap.slack import notify
@@ -40,6 +41,7 @@ def ux_requires_post(function):
         return redirect("index")
     return _wrap_requires_post
 
+@cache_control(max_age=24 * 60 * 60, public=True) # Allow caching for 24 hours (in seconds)
 def index(request):
     return TemplateResponse(request, "core/index.html", _get_index_context())
 
