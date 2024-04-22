@@ -129,6 +129,12 @@ jobs:
         run: |
           python3 manage.py migrate
 
+      - name: Populate articles
+        env:
+          DJ_DATABASE_CONN_STRING: postgres://${{ secrets.POSTGRES_CREDENTIALS }}@localhost:1234/portmap
+        run: |
+          python3 manage.py populate_articles
+
       - name: Stop Cloud SQL Auth Proxy
         run: pkill cloud-sql-proxy
 
