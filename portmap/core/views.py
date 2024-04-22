@@ -57,7 +57,8 @@ def _get_index_context():
             'icon': datatype_icon_map[name] if name in datatype_icon_map else datatype_icon_map['FALLBACK']
         }
 
-    datatypes = map(create_datatype, DataType.objects.all())
+    # Only map the datatypes that actually have articles
+    datatypes = map(create_datatype, DataType.objects.filter(name__in=query_structure.keys()))
 
     return {'form': query_form,
                'query_structure': json.dumps(query_structure),
