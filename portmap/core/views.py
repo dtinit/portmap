@@ -68,6 +68,7 @@ def _get_index_context():
                 'datatypes': datatypes
             }
 
+@cache_control(max_age=24 * 60 * 60, public=True) # Allow caching for 24 hours (in seconds)
 def about(request):
     return TemplateResponse(request, "core/about.html")
 
