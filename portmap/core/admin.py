@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.urls import path
 
 from .forms import UserChangeForm, UserCreationForm
-from .models import User, Article, Feedback, QueryLog, UseCaseFeedback
+from .models import User, Article, Feedback, QueryLog, UseCaseFeedback, DataType
 from .articles import get_content_files
 
 
@@ -58,3 +58,6 @@ class CustomUserAdmin(UserAdmin):
         "last_login",
     ]
 
+@register(DataType, site=admin_site)
+class DataTypeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'helpText')

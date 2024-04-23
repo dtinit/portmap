@@ -10,12 +10,26 @@ from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
-
-from .articles import GithubClient
 from .forms import UpdateAccountForm, QueryIndexForm, ArticleFeedbackForm, UseCaseFeedbackForm
-from .models import User, Article, Feedback, QueryLog, UseCaseFeedback
+from .models import User, Article, Feedback, QueryLog, UseCaseFeedback, DataType
 from portmap.slack import notify
+from .track import track_view
 
+# Specify lucide icon names for each datatype.
+# If there's no match, FALLBACK will be used.
+# New datatypes should have icons added.
+datatype_icon_map = {
+    'Book History': 'library-big',
+    'Contacts': 'contact',
+    'Newsletter': 'send',
+    'Notes': 'notebook-pen',
+    'Photos': 'images',
+    'Playlists': 'list-music',
+    'Tasks': 'list-checks',
+    'Text Social Media': 'message-square-heart',
+    'Videos': 'video',
+    'FALLBACK': 'file'
+}
 
 def ux_requires_post(function):
     @wraps(function)
@@ -33,15 +47,24 @@ def _get_index_context():
     query_structure = Article.get_query_structure()
     query_form = QueryIndexForm(data=None, datatypes=query_structure.keys())
     feedback_form = UseCaseFeedbackForm(data=None, datatype='None', source='', destination='')
-    datatype_help = GithubClient().get_datatype_help()
-    datatype_help_cleaned = {datatype: f"{datatype_help.get(datatype, '')}" for datatype in query_structure.keys()}
 
+    def create_datatype(datatype_object):
+        name = datatype_object.name
+        return {
+            'id': '_'.join(name.split()),
+            'name': name,
+            'help': datatype_object.helpText,
+            'icon': datatype_icon_map[name] if name in datatype_icon_map else datatype_icon_map['FALLBACK']
+        }
+
+    # Only map the datatypes that actually have articles
+    datatypes = map(create_datatype, DataType.objects.filter(name__in=query_structure.keys()))
 
     return {'form': query_form,
                'query_structure': json.dumps(query_structure),
                'use_case_form': feedback_form,
-               'datatypes': query_structure.keys(),
-               'datatype_help': datatype_help_cleaned}
+                'datatypes': datatypes
+            }
 
 def about(request):
     return TemplateResponse(request, "core/about.html")
@@ -97,6 +120,7 @@ def display_article(request, article_name):
                'article_body_html': html,
                'article_name': article_name,
                'reaction_form': ArticleFeedbackForm()}
+    track_view(request, article)
     return TemplateResponse(request, "core/article.html", context, headers={'cache-control':'no-store'})
 
 
