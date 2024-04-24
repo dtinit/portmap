@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
+from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
 from django.views.decorators.cache import cache_control
@@ -44,6 +45,9 @@ def ux_requires_post(function):
 @cache_control(max_age=24 * 60 * 60, public=True) # Allow caching for 24 hours (in seconds)
 def index(request):
     return TemplateResponse(request, "core/index.html", _get_index_context())
+
+def render_index_to_string():
+    return render_to_string("core/index.html", _get_index_context())
 
 def _get_index_context():
     query_structure = Article.get_query_structure()
