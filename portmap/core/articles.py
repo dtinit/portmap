@@ -41,10 +41,10 @@ def get_content_files():
 
     # Generate a static copy of the root index.html
     try:
-        if not os.path.exists(settings.STATIC_ROOT):
-            os.makedirs(settings.STATIC_ROOT)
+        # Make sure the directory exists since it's excluded from source control
+        os.makedirs(settings.STATIC_VIEW_DIR, exist_ok=True)
         indexContent = render_index_to_string()
-        with open(os.path.join(settings.STATIC_ROOT, "index.html"), "w") as indexFile:
+        with open(os.path.join(settings.STATIC_VIEW_DIR, "index.html"), "w") as indexFile:
             indexFile.write(indexContent)
     except Exception as e:
         logging.error(f"Error generating index file: {e}")

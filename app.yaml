@@ -6,8 +6,8 @@ handlers:
 # This is significantly faster (especially when the server instance goes to sleep),
 # but requires the index.html file to be pre-generated.
 - url: /(index\.html)?$
-  static_files: staticfiles/index.html
-  upload: staticfiles/index.html
+  static_files: staticviews/index.html
+  upload: staticviews/index.html
 
 # This configures Google App Engine to serve the files in the app's static
 # directory.
