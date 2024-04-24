@@ -5,13 +5,14 @@ from allauth.account.views import LoginView as AllAuthLoginView
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
 from django.views.decorators.cache import cache_control
+from django.middleware.csrf import get_token
 from .forms import UpdateAccountForm, QueryIndexForm, ArticleFeedbackForm, UseCaseFeedbackForm
 from .models import User, Article, Feedback, QueryLog, UseCaseFeedback, DataType
 from portmap.slack import notify
@@ -71,6 +72,12 @@ def _get_index_context():
                'use_case_form': feedback_form,
                 'datatypes': datatypes
             }
+
+def csrf_token(request):
+    if request.method != 'GET':
+        raise HttpResponse(status=405)
+
+    return JsonResponse({'csrf_token': get_token(request)})
 
 @cache_control(max_age=24 * 60 * 60, public=True) # Allow caching for 24 hours (in seconds)
 def about(request):
