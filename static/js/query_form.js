@@ -1,6 +1,17 @@
 /* global queryStructure */
 
 (function () {
+  function fetchCSRFToken() {
+    return fetch('/csrf_token')
+      .then((response) =>
+        response.ok ? response.json() : { csrf_token: null }
+      )
+      .then((responseJson) => responseJson && responseJson.csrf_token)
+      .catch((err) => {
+        console.error('Failed to fetch CSRF token: ', err);
+      });
+  }
+
   function createOptionElement(text, value = text) {
     const element = document.createElement('option');
     return Object.assign(element, { text, value });
@@ -57,7 +68,8 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    var hidden_form_items = document.getElementsByClassName('formstarthidden');
+    const hidden_form_items =
+      document.getElementsByClassName('formstarthidden');
     for (let item of hidden_form_items) {
       item.style.display = 'none';
     }
@@ -177,5 +189,29 @@
       didNotFind.remove();
       askForArticle.style.display = 'inline';
     });
+
+    // When this page is statically generated, a CSRF token won't be provided.
+    // In that case, we fetch one and insert it ourselves.
+    const feedbackForm = document.getElementById(
+      'multiple_option_feedback_form'
+    );
+    const hasCSRFToken = Boolean(
+      feedbackForm.querySelector('input[name=csrfmiddlewaretoken]')
+    );
+    if (!hasCSRFToken) {
+      fetchCSRFToken().then((token) => {
+        if (!token) {
+          return;
+        }
+        const tokenInputElement = document.createElement('input');
+        tokenInputElement.type = 'hidden';
+        tokenInputElement.name = 'csrfmiddlewaretoken';
+        tokenInputElement.value = token;
+        feedbackForm.prepend(tokenInputElement);
+        document
+          .getElementById('usecase_submit_button')
+          .removeAttribute('disabled');
+      });
+    }
   });
 })();
