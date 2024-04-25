@@ -1,13 +1,15 @@
 from django.contrib import admin
 from django.contrib.admin.decorators import register
 from django.contrib.auth.admin import UserAdmin
-from django.http import HttpResponse
+
+from django.http import HttpRequest, HttpResponse
 from django.urls import path
+from django.db import connection
+from django.db.models import Count
 
 from .forms import UserChangeForm, UserCreationForm
-from .models import User, Article, Feedback, QueryLog, UseCaseFeedback, DataType
+from .models import User, Article, Feedback, QueryLog, UseCaseFeedback, DataType, TrackArticleView
 from .articles import get_content_files
-
 
 class PortmapAdminSite(admin.AdminSite):
     site_header = "Portmap Admin"
@@ -61,3 +63,20 @@ class CustomUserAdmin(UserAdmin):
 @register(DataType, site=admin_site)
 class DataTypeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'helpText')
+
+@register(TrackArticleView, site=admin_site)
+class TrackArticleViewAdmin(admin.ModelAdmin):
+    list_display = ('article_path', "count", "visited_directly", "external_referrer",)
+    aggregated_counts = {}
+
+    def count(self, object):
+        matched_item = next(item for item in self.aggregated_counts if item["article_path"] == object.article_path)
+        return matched_item["count"]
+
+    def get_queryset(self, request):
+        qs = super(TrackArticleViewAdmin, self).get_queryset(request)
+        self.aggregated_counts = list(qs.values("article_path").annotate(count=Count('article_path')))
+        return qs.annotate(count=Count('article_path'))
+
+    def get_object(self, request, object_id, from_field=None):
+        return TrackArticleView.objects.filter(id=object_id).first()
