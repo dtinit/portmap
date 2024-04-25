@@ -61,5 +61,5 @@ class CustomUserAdmin(UserAdmin):
     ]
 
 @register(TrackArticleView, site=admin_site)
-class TestingArticleViewAdmin(admin.ModelAdmin):
-    list_display = ("article", "article_path", "visited_directly", "external_referrer", )
+class TrackArticleViewAdmin(admin.ModelAdmin):
+    list_display = ("article", "article_path", "visited_directly", "external_referrer", )  
