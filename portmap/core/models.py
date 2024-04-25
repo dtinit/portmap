@@ -67,7 +67,7 @@ class Article(BaseModel):
         return self.destinations.split(',')
 
     def view_count(self):
-        TrackArticleView.objects.filter(article = self)
+        return TrackArticleView.objects.filter(article = self).count()
 
 class Feedback(BaseModel):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
