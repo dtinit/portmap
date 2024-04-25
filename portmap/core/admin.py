@@ -24,7 +24,7 @@ admin_site._registry.update(admin.site._registry)
 
 @register(Article, site=admin_site)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ("name", "datatype", "title", "source_list", "destination_list")
+    list_display = ("name", "datatype", "title", "source_list", "destination_list", "view_count", )
 
     def get_urls(self):
         urls = super().get_urls()
@@ -60,23 +60,6 @@ class CustomUserAdmin(UserAdmin):
         "last_login",
     ]
 
-@register(DataType, site=admin_site)
-class DataTypeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'helpText')
-
 @register(TrackArticleView, site=admin_site)
-class TrackArticleViewAdmin(admin.ModelAdmin):
-    list_display = ('article_path', "count", "visited_directly", "external_referrer",)
-    aggregated_counts = {}
-
-    def count(self, object):
-        matched_item = next(item for item in self.aggregated_counts if item["article_path"] == object.article_path)
-        return matched_item["count"]
-
-    def get_queryset(self, request):
-        qs = super(TrackArticleViewAdmin, self).get_queryset(request)
-        self.aggregated_counts = list(qs.values("article_path").annotate(count=Count('article_path')))
-        return qs.annotate(count=Count('article_path'))
-
-    def get_object(self, request, object_id, from_field=None):
-        return TrackArticleView.objects.filter(id=object_id).first()
+class TestingArticleViewAdmin(admin.ModelAdmin):
+    list_display = ("article", "article_path", "visited_directly", "external_referrer", )
