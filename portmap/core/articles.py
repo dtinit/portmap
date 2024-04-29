@@ -2,10 +2,13 @@ import base64
 import requests
 import yaml
 import logging
+import os
+from django.conf import settings
 from pathlib import Path
 from portmap.utils import extract_yaml_and_body
 from .models import Article, DataType
 from portmap.github_auth import get_github_auth_token
+from .views import render_index_to_string
 
 
 def get_content_files():
@@ -36,8 +39,18 @@ def get_content_files():
         logging.error(f"Error accessing Github API: {e}")
         raise RuntimeError("Failed to access Github API.")
 
-    return debug_articles_info
+    # Generate a static copy of the root index.html
+    try:
+        # Make sure the directory exists since it's excluded from source control
+        os.makedirs(settings.STATIC_VIEW_DIR, exist_ok=True)
+        indexContent = render_index_to_string()
+        with open(os.path.join(settings.STATIC_VIEW_DIR, "index.html"), "w") as indexFile:
+            indexFile.write(indexContent)
+    except Exception as e:
+        logging.error(f"Error generating index file: {e}")
+        raise RuntimeError("Failed to generate index file")
 
+    return debug_articles_info
 
 class GithubClient:
     REPOSITORY_URL = "https://api.github.com/repos/dtinit/portability-articles"

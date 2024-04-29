@@ -21,6 +21,7 @@ urlpatterns = [
     path("find_articles", views.find_articles, name="find_articles"),
     # core
     path("about", views.about, name="about"),
+    path("csrf_token", views.csrf_token, name="csrf_token"),
     path("", views.index, name="index"),
 ]
 

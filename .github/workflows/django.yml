@@ -129,17 +129,17 @@ jobs:
         run: |
           python3 manage.py migrate
 
-      - name: Populate articles
+      - name: Update DB and generate index.html
         env:
           DJ_DATABASE_CONN_STRING: postgres://${{ secrets.POSTGRES_CREDENTIALS }}@localhost:1234/portmap
         run: |
-          python3 manage.py populate_articles
+          python3 manage.py refresh
 
       - name: Stop Cloud SQL Auth Proxy
         run: pkill cloud-sql-proxy
 
       - name: Collect static files
-        run: python3 manage.py collectstatic
+        run: python3 manage.py collectstatic --no-input
 
       - name: Deploy to Cloud Run
         run: gcloud app deploy --project=portability-map

@@ -2,10 +2,18 @@
 runtime: python311
 
 handlers:
+# Serve a statically-generated version of the index page without spinning up the server.
+# This is significantly faster (especially when the server instance goes to sleep),
+# but requires the index.html file to be pre-generated.
+- url: /(index\.html)?$
+  static_files: staticviews/index.html
+  upload: staticviews/index.html
+
 # This configures Google App Engine to serve the files in the app's static
 # directory.
 - url: /static
   static_dir: staticfiles/
+  upload: staticfiles/(.*)
 
 # This handler routes all requests not caught above to your main app. It is
 # required when static routes are defined, but can be omitted (along with
