@@ -77,3 +77,14 @@ class IndexTests(StaticLiveServerTestCase):
         for datatype in datatypes:
             validate_datatype(datatype)
 
+    def test_usecase_feedback_form(self):
+        page = self.context.new_page()
+        page.goto("/")
+        page.get_by_text("Can't see the option you're looking for?").click()
+        page.locator('form#multiple_option_feedback_form textarea').fill("TEST FEEDBACK FROM PLAYWRIGHT")
+        with page.expect_request('/usecase_feedback') as request_info:
+            page.get_by_text('Give Feedback').click()
+
+        expect(page).to_have_url('/usecase_feedback')
+        assert request_info.value.post_data_json['explanation'] == 'TEST FEEDBACK FROM PLAYWRIGHT'
+
