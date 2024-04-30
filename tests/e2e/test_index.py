@@ -35,9 +35,10 @@ class IndexTests(StaticLiveServerTestCase):
 
         datatypes = page.locator('label.radiogrid').all()
         assert len(datatypes) > 0
+        source_dropdown = page.get_by_label('Transfer from')
+        destination_dropdown = page.get_by_label(' to', exact=True)
 
         def validate_current_source():
-            destination_dropdown = page.get_by_label(' to', exact=True)
             destinations = destination_dropdown.get_by_role('option').all()
             destination_count = len(destinations)
             assert destination_count > 1 # One option is a placeholder
@@ -60,8 +61,9 @@ class IndexTests(StaticLiveServerTestCase):
 
         def validate_datatype(datatype):
             datatype.click()
-            source_dropdown = page.get_by_label('Transfer from')
             expect(source_dropdown).to_be_enabled()
+            # The destination dropdown is disabled until a source is selected
+            expect(page.get_by_label(' to', exact=True)).to_be_disabled()
             sources = source_dropdown.get_by_role('option').all()
             source_count = len(sources)
             assert source_count > 1 # One option is a placeholder
@@ -70,6 +72,8 @@ class IndexTests(StaticLiveServerTestCase):
                 source_dropdown.select_option(index=source_index)
                 validate_current_source()
 
+        # The source dropdown is disabled until a datatype is selected
+        expect(source_dropdown).to_be_disabled()
         for datatype in datatypes:
             validate_datatype(datatype)
 
