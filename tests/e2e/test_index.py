@@ -25,7 +25,7 @@ class IndexTests(StaticLiveServerTestCase):
     def test_has_title(self):
         page = self.context.new_page()
         page.goto("/")
-        expect(page).to_have_title(re.compile("PortMap"))
+        expect(page).to_have_title("PortMap")
 
     # Loop through all the datatypes, sources, and destinations to validate them
     def test_datatypes_and_articles(self):
