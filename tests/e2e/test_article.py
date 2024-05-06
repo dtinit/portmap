@@ -3,13 +3,15 @@ import os
 import pytest
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from playwright.sync_api import expect, sync_playwright
-from portmap.core.models import Article
+from portmap.core.models import Article, Feedback
 
 # Tests for articles
 
+TEST_ARTICLE_NAME = 'testarticle.md'
+
 def create_test_article():
     Article.objects.create(
-        name='testarticle.md',
+        name=TEST_ARTICLE_NAME,
         datatype='Test datatype',
         sources='Test source',
         destinations='Test destination',
@@ -34,40 +36,47 @@ class ArticleTests(StaticLiveServerTestCase):
     def test_reaction_form_requires_selection(self):
         create_test_article()
         page = self.context.new_page()
-        page.goto("/articles/testarticle.md/")
+        page.goto('/articles/' + TEST_ARTICLE_NAME + '/')
         expect(page.locator('form#query_form textarea[name=explanation]')).to_be_hidden()
 
     def test_happy_reaction(self):
         create_test_article()
         page = self.context.new_page()
-        page.goto("/articles/testarticle.md/")
+        page.goto('/articles/' + TEST_ARTICLE_NAME + '/')
         page.locator('form#query_form input[value=happy]').click()
-        with page.expect_request('/articles/testarticle.md/feedback') as request_info:
-            page.get_by_text('Give feedback').click();
-
+        page.get_by_text('Give feedback').click();
         expect(page).to_have_url('/articles/testarticle.md/feedback')
-        assert request_info.value.post_data_json['reaction'] == 'happy'
+        feedbackCollection = Feedback.objects.all()
+        assert len(feedbackCollection) == 1
+        newFeedback = feedbackCollection.first()
+        assert newFeedback.article.name == TEST_ARTICLE_NAME
+        assert newFeedback.reaction == 'happy'
 
     def test_sad_reaction(self):
         create_test_article()
         page = self.context.new_page()
-        page.goto("/articles/testarticle.md/")
+        page.goto('/articles/' + TEST_ARTICLE_NAME + '/')
         page.locator('form#query_form input[value=sad]').click()
-        with page.expect_request('/articles/testarticle.md/feedback') as request_info:
-            page.get_by_text('Give feedback').click();
-
+        page.get_by_text('Give feedback').click();
         expect(page).to_have_url('/articles/testarticle.md/feedback')
-        assert request_info.value.post_data_json['reaction'] == 'sad'
+        feedbackCollection = Feedback.objects.all()
+        assert len(feedbackCollection) == 1
+        newFeedback = feedbackCollection.first()
+        assert newFeedback.article.name == TEST_ARTICLE_NAME
+        assert newFeedback.reaction == 'sad'
 
     def test_reaction_explanation(self):
+        mock_explanation = 'TEST FEEDBACK FROM PLAYWRIGHT'
         create_test_article()
         page = self.context.new_page()
-        page.goto("/articles/testarticle.md/")
+        page.goto('/articles/' + TEST_ARTICLE_NAME + '/')
         page.locator('form#query_form input[value=happy]').click()
-        page.locator('form#query_form textarea[name=explanation]').fill('TEST FEEDBACK FROM PLAYWRIGHT')
-        with page.expect_request('/articles/testarticle.md/feedback') as request_info:
-            page.get_by_text('Give feedback').click();
-
+        page.locator('form#query_form textarea[name=explanation]').fill(mock_explanation)
+        page.get_by_text('Give feedback').click();
         expect(page).to_have_url('/articles/testarticle.md/feedback')
-        assert request_info.value.post_data_json['explanation'] == 'TEST FEEDBACK FROM PLAYWRIGHT'
+        feedbackCollection = Feedback.objects.all()
+        assert len(feedbackCollection) == 1
+        newFeedback = feedbackCollection.first()
+        assert newFeedback.article.name == TEST_ARTICLE_NAME
+        assert newFeedback.explanation == mock_explanation
 
