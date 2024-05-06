@@ -4,6 +4,7 @@ import pytest
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from playwright.sync_api import expect, sync_playwright
 from portmap.core.articles import get_content_files
+from portmap.core.models import UseCaseFeedback, Article, DataType
 
 # Tests for the root index page
 
@@ -77,14 +78,17 @@ class IndexTests(StaticLiveServerTestCase):
         for datatype in datatypes:
             validate_datatype(datatype)
 
+    @pytest.mark.django_db
     def test_usecase_feedback_form(self):
+        mock_explanation = 'TEST FEEDBACK FROM PLAYWRIGHT'
         page = self.context.new_page()
-        page.goto("/")
+        page.goto('/')
         page.get_by_text("Can't see the option you're looking for?").click()
-        page.locator('form#multiple_option_feedback_form textarea').fill("TEST FEEDBACK FROM PLAYWRIGHT")
-        with page.expect_request('/usecase_feedback') as request_info:
-            page.get_by_text('Give Feedback').click()
-
+        page.locator('form#multiple_option_feedback_form textarea').fill(mock_explanation)
+        page.get_by_text('Give Feedback').click()
         expect(page).to_have_url('/usecase_feedback')
-        assert request_info.value.post_data_json['explanation'] == 'TEST FEEDBACK FROM PLAYWRIGHT'
+        feedbackCollection = UseCaseFeedback.objects.all()
+        assert len(feedbackCollection) == 1
+        newFeedback = feedbackCollection.first()
+        assert newFeedback.explanation == mock_explanation
 

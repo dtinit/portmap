@@ -10,7 +10,7 @@ from portmap.core.models import Article
 def create_test_article():
     Article.objects.create(
         name='testarticle.md',
-        datatype="DT",
+        datatype='Test datatype',
         sources='Test source',
         destinations='Test destination',
         title='Test article',
