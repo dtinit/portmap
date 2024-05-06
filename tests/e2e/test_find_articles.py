@@ -3,6 +3,7 @@ import pytest
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from playwright.sync_api import expect, sync_playwright
 from portmap.core.models import UseCaseFeedback, Article
+from tests.core.fixtures.factories import ArticleFactory
 
 # Tests for the find_articles query
 
@@ -25,32 +26,18 @@ class FindArticlesTests(StaticLiveServerTestCase):
     # the user is presented a list to choose from and a feedback form.
     @pytest.mark.django_db
     def test_usecase_feedback_form(self):
-        mock_datatype = 'Mock Datatype'
-        mock_source = 'Mock Source'
-        mock_destination = 'Mock Destination'
         mock_explanation = 'TEST FEEDBACK FROM PLAYWRIGHT'
-
-        Article.objects.create(
-            name='article1',
-            datatype=mock_datatype,
-            sources=mock_source,
-            destinations=mock_destination,
-            title='Test article 1',
-            body='Test article 1'
-        )
-        Article.objects.create(
-            name='article2',
-            datatype=mock_datatype,
-            sources=mock_source,
-            destinations=mock_destination,
-            title='Test article 2',
-            body='Test article 2'
+        article1 = ArticleFactory()
+        article2 = ArticleFactory(
+            datatype=article1.datatype,
+            sources=article1.sources,
+            destinations=article1.destinations
         )
 
         page = self.context.new_page()
-        page.goto('/find_articles?datatype=' + mock_datatype
-                  + '&datasource=' + mock_source
-                  + '&datadest=' + mock_destination)
+        page.goto('/find_articles?datatype=' + article1.datatype
+                  + '&datasource=' + article1.sources
+                  + '&datadest=' + article1.destinations)
 
         page.locator('form#multiple_option_feedback_form textarea').fill(mock_explanation)
         page.get_by_text('Give Feedback').click()
@@ -59,7 +46,7 @@ class FindArticlesTests(StaticLiveServerTestCase):
         assert len(feedbackCollection) == 1
         newFeedback = feedbackCollection.first()
         assert newFeedback.explanation == mock_explanation
-        assert newFeedback.datatype == mock_datatype
-        assert newFeedback.source == mock_source
-        assert newFeedback.destination == mock_destination
+        assert newFeedback.datatype == article1.datatype
+        assert newFeedback.source == article1.sources
+        assert newFeedback.destination == article1.destinations
 
