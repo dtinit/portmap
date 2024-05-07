@@ -1,19 +1,18 @@
-name: Django CI
+name: Django CI/CD
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  repository_dispatch:
+    types: [content_update]
   workflow_dispatch:
 
 jobs:
   test-python:
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.11]
+
     services:
       postgres:
         image: postgres:15
@@ -31,10 +30,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python
       uses: actions/setup-python@v3
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.11
 
     - name: Install Dependencies
       run: |
@@ -82,7 +81,9 @@ jobs:
     # This workflow is used to check PRs, in which case we don't want to deploy.
     # Ensure we only deploy after a push to the main branch, or when triggered manually.
     if: |
-      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      (github.event_name == 'push' ||
+        github.event_name == 'workflow_dispatch' ||
+        github.event_name == 'repository_dispatch') &&
       github.ref == 'refs/heads/main'
     # Don't deploy unless these jobs ran successfully.
     needs: [test-python, lint-js, check-js-formatting]
