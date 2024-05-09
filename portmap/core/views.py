@@ -1,10 +1,13 @@
 from functools import wraps
 import json
 import markdown
+import requests
 from allauth.account.views import LoginView as AllAuthLoginView
+from django.utils.feedgenerator import DefaultFeed
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.syndication.views import Feed
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
@@ -216,3 +219,54 @@ def debug_list_articles(request):
 
 def debug_help_dev(request):
     return TemplateResponse(request, "core/debug_index.html")
+
+class CorrectMimeTypeFeed(DefaultFeed):
+    content_type = 'application/xml; charset=utf-8'
+
+class RssFeed(Feed):
+    feed_type = CorrectMimeTypeFeed
+    title_template = "feed/article_title.html"
+    description_template = "feed/article_description.html"
+    title = "RSS Feed"
+    link = "https://portmap.dtinit.org/articles_feed"
+    description = "Articles from Portability Articles repo"
+
+    def items(self):
+        github_articles = "https://api.github.com/repos/dtinit/portability-articles/contents/articles"
+        response = requests.get(github_articles)
+        articles = response.json()
+
+        parsed_articles = []
+        for article in articles:
+            
+            name = article["name"]
+            html_url = article["html_url"]
+            content_response = requests.get(article['download_url'])
+
+            if content_response.status_code == 200:
+
+                markdown_content = content_response.text
+                parts = markdown_content.split('---')
+                metadata_lines = parts[1].strip().split('\n')
+                title = None
+
+                for line in metadata_lines:
+                    if line.startswith('title:'):
+                        title = line.split(':', 1)[1].strip()
+                        break
+
+                main_content = parts[-1]
+
+            parsed_articles.append({
+                "name": name,
+                "html_url": html_url,
+                "title": title,
+                "content": main_content
+            })
+        return parsed_articles
+    
+    def item_title(self, item):
+        return item["title"]
+    
+    def item_link(self, item):
+        return item["html_url"]
