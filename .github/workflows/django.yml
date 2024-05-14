@@ -29,9 +29,9 @@ jobs:
           - 5432:5432
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: 3.11
 
@@ -56,8 +56,8 @@ jobs:
   lint-js:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
 
       - name: Install npm dependencies
         run: npm ci
@@ -68,8 +68,8 @@ jobs:
   check-js-formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
 
       - name: Install npm dependencies
         run: npm ci
@@ -90,10 +90,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: 'actions/checkout@v4'
+      - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: 3.11
 
