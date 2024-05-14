@@ -1,6 +1,6 @@
 from functools import wraps
 import json
-import markdown
+import pycmarkgfm
 from allauth.account.views import LoginView as AllAuthLoginView
 from django.conf import settings
 from django.contrib import messages
@@ -129,7 +129,7 @@ def login_as_user(request):
 
 def display_article(request, article_name):
     article = Article.objects.get(name=article_name)
-    html = mark_safe(markdown.markdown(article.body))
+    html = mark_safe(pycmarkgfm.gfm_to_html(article.body))
     context = {'article': article,
                'article_body_html': html,
                'article_name': article_name,
