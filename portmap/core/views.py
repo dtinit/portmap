@@ -1,5 +1,6 @@
 from functools import wraps
 import json
+from django.db.models.base import Model
 import markdown
 import requests
 from allauth.account.views import LoginView as AllAuthLoginView
@@ -229,44 +230,24 @@ class RssFeed(Feed):
     description_template = "feed/article_description.html"
     title = "RSS Feed"
     link = "https://portmap.dtinit.org/articles_feed"
+    portmap_link = "https://portmap.dtinit.org"
     description = "Articles from Portability Articles repo"
 
     def items(self):
-        github_articles = "https://api.github.com/repos/dtinit/portability-articles/contents/articles"
-        response = requests.get(github_articles)
-        articles = response.json()
-
         parsed_articles = []
-        for article in articles:
-            
-            name = article["name"]
-            html_url = article["html_url"]
-            content_response = requests.get(article['download_url'])
 
-            if content_response.status_code == 200:
-
-                markdown_content = content_response.text
-                parts = markdown_content.split('---')
-                metadata_lines = parts[1].strip().split('\n')
-                title = None
-
-                for line in metadata_lines:
-                    if line.startswith('title:'):
-                        title = line.split(':', 1)[1].strip()
-                        break
-
-                main_content = parts[-1]
+        for article in Article.objects.all():
+            title = article.title
+            body = article.body
+            html_url = article.get_absolute_url()
 
             parsed_articles.append({
-                "name": name,
-                "html_url": html_url,
                 "title": title,
-                "content": main_content
+                "body": body,
+                "html_url": html_url
             })
+
         return parsed_articles
     
-    def item_title(self, item):
-        return item["title"]
-    
     def item_link(self, item):
-        return item["html_url"]
+        return self.portmap_link + item["html_url"]
