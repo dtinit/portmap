@@ -1,7 +1,6 @@
 from functools import wraps
 import json
 from django.db.models.base import Model
-import markdown
 import requests
 import pycmarkgfm
 from allauth.account.views import LoginView as AllAuthLoginView
