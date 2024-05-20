@@ -1,10 +1,14 @@
 from functools import wraps
 import json
+from django.db.models.base import Model
+import requests
 import pycmarkgfm
 from allauth.account.views import LoginView as AllAuthLoginView
+from django.utils.feedgenerator import DefaultFeed
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.syndication.views import Feed
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
@@ -216,3 +220,34 @@ def debug_list_articles(request):
 
 def debug_help_dev(request):
     return TemplateResponse(request, "core/debug_index.html")
+
+class CorrectMimeTypeFeed(DefaultFeed):
+    content_type = 'application/xml; charset=utf-8'
+
+class RssFeed(Feed):
+    feed_type = CorrectMimeTypeFeed
+    title_template = "feed/article_title.html"
+    description_template = "feed/article_description.html"
+    title = "RSS Feed"
+    link = "https://portmap.dtinit.org/articles_feed"
+    portmap_link = "https://portmap.dtinit.org"
+    description = "Articles from Portability Articles repo"
+
+    def items(self):
+        parsed_articles = []
+
+        for article in Article.objects.all():
+            title = article.title
+            body = article.body
+            html_url = article.get_absolute_url()
+
+            parsed_articles.append({
+                "title": title,
+                "body": body,
+                "html_url": html_url
+            })
+
+        return parsed_articles
+    
+    def item_link(self, item):
+        return self.portmap_link + item["html_url"]
