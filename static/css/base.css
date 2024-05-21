@@ -665,3 +665,18 @@ footer {
     margin-bottom: 20px;
   }
 }
+
+a.icon-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+ul.vertical-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+ul.vertical-list li {
+  margin: 0.75rem 0;
+}
