@@ -8,14 +8,17 @@
 {% block content %}
 <section class="page page--wide">
     {% include "includes/nav-bar.html" %}
-<h1>Thank you!</h1>
+<h1>Thank you! <i data-lucide="heart" color="#e64e33"></i></h1>
 
-<p>    <i data-lucide="heart" color="#e64e33"></i>
-We appreciate your feedback.  It's stored anonymously, and we'll use it
+<p>
+    We appreciate your feedback.  It's stored anonymously, and we'll use it
 to inform our work on data portability requirements, standards and
-libraries.</p>
-    <p>&nbsp;<!-- LMDTODO remove manual spacing when we have a site design --></p>
-<p><a href="/"><i data-lucide="home"></i> Back home</a></p>
+libraries.
+</p>
+<ul class="vertical-list">
+    <li><a href="{{ referer }}" class="icon-link"><i data-lucide="arrow-left"></i>Back</a></li>
+    <li><a href="/" class="icon-link"><i data-lucide="home"></i>Home</a></li>
+</ul>
 </section>
 
 <script>

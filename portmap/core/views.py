@@ -197,7 +197,8 @@ def article_feedback(request, article_name):
                             explanation=form.data['explanation'])
     message = "*New article feedback for \"" + article_name + "\"*:\n\nReaction: " + form.data['reaction'] + "\n\n" + form.data['explanation']
     notify(message)
-    return TemplateResponse(request, "core/thankyou.html")
+    referer = request.META.get('HTTP_REFERER', '/')
+    return TemplateResponse(request, "core/thankyou.html", {'referer': referer})
 
 
 @ux_requires_post
@@ -208,7 +209,8 @@ def usecase_feedback(request):
         message = "*New use case feedback:*\n\n" + feedback.data['explanation']
         notify(message)
 
-    return TemplateResponse(request, "core/thankyou.html")
+    referer = request.META.get('HTTP_REFERER', '/')
+    return TemplateResponse(request, "core/thankyou.html", {'referer': referer})
 
 
 def debug_list_articles(request):
