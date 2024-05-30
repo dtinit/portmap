@@ -227,8 +227,8 @@ class CorrectMimeTypeFeed(DefaultFeed):
 
 class RssFeed(Feed):
     feed_type = CorrectMimeTypeFeed
-    title_template = "feed/article_title.html"
-    description_template = "feed/article_description.html"
+    title_template = "feeds/article_title.html"
+    description_template = "feeds/article_description.html"
     title = "RSS Feed"
     link = "https://portmap.dtinit.org/articles_feed"
     portmap_link = "https://portmap.dtinit.org"
