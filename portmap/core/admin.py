@@ -26,6 +26,19 @@ admin_site._registry.update(admin.site._registry)
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ("name", "datatype", "title", "source_list", "destination_list", "view_count", )
 
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.annotate(
+            _view_count=Count("trackarticleview", distinct=True),
+        )
+        return queryset
+    
+    def view_count(self, obj):
+        return obj._view_count
+    
+    view_count.admin_order_field = '_view_count'
+
+
     def get_urls(self):
         urls = super().get_urls()
         urls = [path("populate/", self.admin_site.admin_view(self.populate)),

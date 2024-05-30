@@ -1,7 +1,6 @@
 from functools import wraps
 import json
-from django.db.models.base import Model
-import requests
+import markdown2
 import pycmarkgfm
 from allauth.account.views import LoginView as AllAuthLoginView
 from django.utils.feedgenerator import DefaultFeed
@@ -241,15 +240,26 @@ class RssFeed(Feed):
         for article in Article.objects.all():
             title = article.title
             body = article.body
+            html_body = markdown2.markdown(body)
             html_url = article.get_absolute_url()
+            created_at = article.created_at
+            updated_at = article.updated_at
 
             parsed_articles.append({
                 "title": title,
-                "body": body,
-                "html_url": html_url
+                "body": html_body,
+                "html_url": html_url,
+                "created_at": created_at,
+                "updated_at": updated_at
             })
 
         return parsed_articles
     
     def item_link(self, item):
         return self.portmap_link + item["html_url"]
+    
+    def item_pubdate(self, item):
+        return item["created_at"]
+
+    def item_updateddate(self, item):
+        return item["updated_at"]
