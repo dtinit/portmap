@@ -27,6 +27,7 @@
             stacked: true,
           },
         },
+        responsive: false,
       },
     });
   };
@@ -63,6 +64,7 @@
               text: `Queried ${datatype} ${queryCountName}`,
             },
           },
+          responsive: false,
         },
       });
     });

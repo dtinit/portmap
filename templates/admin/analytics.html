@@ -9,12 +9,14 @@
 {% endblock header %}
 
 <h1>Datatype interest</h1>
-<canvas id="queried-datatypes"></canvas>
+<canvas id="queried-datatypes" width="800"></canvas>
 <h1>Queried source and destinations by datatype</h1>
 <ul id="src-dest-tab-list" class="tab-list"></ul>
-<canvas id="datatype-sources"></canvas>
-<canvas id="datatype-destinations"></canvas>
-<canvas id="datatype-transitions"></canvas>
+<canvas id="datatype-sources" width="800"></canvas>
+<br >
+<canvas id="datatype-destinations" width="800"></canvas>
+<br >
+<canvas id="datatype-transitions" width="800"></canvas>
 <script>
     window.stats = JSON.parse('{{ stats | safe }}');
 </script>
