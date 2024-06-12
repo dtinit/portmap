@@ -28,6 +28,60 @@
           },
         },
         responsive: false,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (tooltipItem) => {
+                const tooltip = `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}`;
+                // If one of the datasets is hidden, the percentage value is confusing
+                if (
+                  tooltipItem.chart.data.datasets.some(({ hidden }) => hidden)
+                ) {
+                  return tooltip;
+                }
+                const total = tooltipItem.chart.data.datasets.reduce(
+                  (sum, dataset) => dataset.data[tooltipItem.dataIndex] + sum,
+                  0
+                );
+                const percentage = tooltipItem.raw / total;
+                const formattedPercentage = Math.round(percentage * 100);
+                return `${tooltip} (${formattedPercentage} %)`;
+              },
+            },
+          },
+          legend: {
+            onClick: (event, legendItem) => {
+              event.chart.data.datasets[legendItem.datasetIndex].hidden =
+                !event.chart.data.datasets[legendItem.datasetIndex].hidden;
+              // Resort the data based on the *visible* datasets
+              const scoringFns = event.chart.data.datasets.map((dataset, i) => {
+                if (dataset.hidden) {
+                  return () => 0;
+                }
+                if (i === 0) {
+                  return ({ queries }) => queries;
+                }
+                // i === 1
+                return ({ views }) => views;
+              });
+              const scoreItem = (item) =>
+                scoringFns
+                  .map((scoringFn) => scoringFn(item)) // map each fn to a score
+                  .reduce((total, value) => total + value); // calculate the total score
+              const sortedData = data
+                .slice()
+                .sort(([, a], [, b]) => scoreItem(b) - scoreItem(a));
+              event.chart.data.labels = sortedData.map(([label]) => label);
+              event.chart.data.datasets[0].data = sortedData.map(
+                ([, { queries }]) => queries
+              );
+              event.chart.data.datasets[1].data = sortedData.map(
+                ([, { views }]) => views
+              );
+              event.chart.update();
+            },
+          },
+        },
       },
     });
   };
