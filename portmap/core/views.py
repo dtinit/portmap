@@ -34,6 +34,7 @@ datatype_icon_map = {
     'Tasks': 'list-checks',
     'Text Social Media': 'message-square-heart',
     'Videos': 'video',
+    'Viewing History': 'tv-minimal-play',
     'FALLBACK': 'file'
 }
 
@@ -254,10 +255,10 @@ class RssFeed(Feed):
             })
 
         return parsed_articles
-    
+
     def item_link(self, item):
         return self.portmap_link + item["html_url"]
-    
+
     def item_pubdate(self, item):
         return item["created_at"]
 
