@@ -11,7 +11,7 @@ from portmap.github_auth import get_github_auth_token
 from .views import render_index_to_string
 
 
-def process_article(article_item, article_content):
+def process_article(article_name, article_content):
     try:
         yaml_header, body = extract_yaml_and_body(article_content)
         new_data = {'body': body,
@@ -19,11 +19,11 @@ def process_article(article_item, article_content):
                     'datatype': yaml_header['datatype'],
                     'sources': yaml_header['sources'],
                     'destinations': yaml_header['destinations']}
-        Article.objects.update_or_create(name=article_item['name'], defaults=new_data)
+        Article.objects.update_or_create(name=article_name, defaults=new_data)
 
     except Exception as e:
-        logging.error(f"Error processing article {article_item['name']}: {e}")
-        raise RuntimeError(f"Failed to process article '{article_item['name']}'. Check for headers and datatype values.")
+        logging.error(f"Error processing article {article_name}: {e}")
+        raise RuntimeError(f"Failed to process article '{article_name}'. Check for headers and datatype values.")
 
 
 def get_content_files():
@@ -40,7 +40,7 @@ def get_content_files():
         logging.error(f"Error accessing Github API: {e}")
         raise RuntimeError("Failed to access Github API.")
 
-    for article_name, article_body in article_data:
+    for article_name, article_body in article_data.items():
         process_article(article_name, article_body)
 
     # Generate a static copy of the root index.html
