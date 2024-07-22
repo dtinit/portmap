@@ -167,13 +167,6 @@ def find_articles(request):
                                     source=form.data['datasource'],
                                     destination=form.data['datadest'])
 
-            message = "*New query:* Transfer " + form.data['datatype'] + " from " + form.data['datasource']
-            if form.data['datadest']:
-                message += " to " + form.data['datadest']
-
-            notify(message)
-
-
             if possible_articles.count() == 1:
                 return redirect(f"/articles/{possible_articles[0].name}")
             else:
