@@ -74,6 +74,7 @@ python -m pip install -r requirements.txt
 9. To populate your local database with articles from https://github.com/dtinit/portability-articles, go to https://localhost:8000/dj-admin and enter your superuser credentials from step 7. Click on "Articles" (under "Core"), and then press the "Populate Articles" button in the top right.
 
 10. (Optional step for running tests locally) Install playwright dependencies.
+
 ```bash
 playwright install
 ```
@@ -98,4 +99,9 @@ You can format JavaScript and CSS files with `npm run format`.
 To enable formatting from your code editor, [check here](https://prettier.io/docs/en/editors) for instructions for your editor. The configuration file is named [.prettierrc](.prettierrc), but your editor will probably find it for you.
 
 ### Testing
+
 Make sure playwright is installed (`playwright install`), then run `pytest` to run both unit and end-to-end tests.
+
+## Deployments
+
+Deployments to production are triggered automatically by updates to the main branch, or when this repository receives a "content update" notification from https://github.com/dtinit/portability-articles. You can observe the status of deployments [here](https://github.com/dtinit/portmap/actions/workflows/django.yml?query=branch%3Amain).

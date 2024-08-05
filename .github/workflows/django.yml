@@ -142,6 +142,6 @@ jobs:
       - name: Collect static files
         run: python3 manage.py collectstatic --no-input
 
-      - name: Deploy to Cloud Run
+      - name: Deploy to App Engine
         run: gcloud app deploy --project=portability-map
 
