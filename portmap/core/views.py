@@ -3,7 +3,7 @@ import json
 import markdown2
 import pycmarkgfm
 from allauth.account.views import LoginView as AllAuthLoginView
-from django.utils.feedgenerator import DefaultFeed
+from django.utils.feedgenerator import Rss201rev2Feed
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -216,15 +216,50 @@ def debug_list_articles(request):
 def debug_help_dev(request):
     return TemplateResponse(request, "core/debug_index.html")
 
-class CorrectMimeTypeFeed(DefaultFeed):
+class CorrectMimeTypeFeed(Rss201rev2Feed):
     content_type = 'application/xml; charset=utf-8'
+
+    def add_item_elements(self, handler, item):
+        # Use the default behavior for all other elements
+        super().add_item_elements(handler, item)
+        
+        # Modify the default <link> tag to include the href attribute
+        if 'link' in item:
+            handler.addQuickElement('link', '', {'href': item['link']})
+
+        # Add <updated> for the last modified date
+        if 'updateddate' in item:
+            handler.addQuickElement('updated', item['updateddate'].strftime('%a, %d %b %Y %H:%M:%S %z'))
+
+    def add_root_elements(self, handler):
+        # Add the default elements
+        handler.addQuickElement('title', self.feed['title'])
+        handler.addQuickElement('link', self.feed['link'])
+        handler.addQuickElement('description', self.feed['description'])
+
+        if self.feed['language'] is not None:
+            handler.addQuickElement('language', self.feed['language'])
+        
+        # Add custom <atom:link> with useful attributes
+        if self.feed['feed_url'] is not None:
+            handler.addQuickElement(
+                'atom:link', '', {
+                    'rel': 'self', 
+                    'href': 'https://portmap.dtinit.org/rss',
+                    'type': 'application/rss+xml',
+                    'title': 'Portmap articles'
+                }
+            )
+        
+        if self.feed['author_name'] is not None:
+            handler.addQuickElement('author', self.feed['author_name'])
 
 class RssFeed(Feed):
     feed_type = CorrectMimeTypeFeed
     title_template = "feeds/article_title.html"
     description_template = "feeds/article_description.html"
     title = "RSS Feed"
-    link = "https://portmap.dtinit.org/articles_feed"
+    link = "https://portmap.dtinit.org/rss"
     portmap_link = "https://portmap.dtinit.org"
     description = "Articles from Portability Articles repo"
 
@@ -232,10 +267,12 @@ class RssFeed(Feed):
         parsed_articles = []
 
         for article in Article.objects.all():
+
             title = article.title
             body = article.body
             html_body = markdown2.markdown(body)
             html_url = article.get_absolute_url()
+
             created_at = article.created_at
             updated_at = article.updated_at
 
@@ -250,7 +287,12 @@ class RssFeed(Feed):
         return parsed_articles
 
     def item_link(self, item):
+        # This will be used to generate the href link
         return self.portmap_link + item["html_url"]
+    
+    def item_guid(self):
+        # Suppress the <guid> element
+        return None
 
     def item_pubdate(self, item):
         return item["created_at"]
