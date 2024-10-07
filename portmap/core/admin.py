@@ -1,17 +1,17 @@
+import json
+
 from django.contrib import admin
 from django.contrib.admin.decorators import register
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.admin.views.decorators import staff_member_required
-import json
-
-from django.http import HttpRequest, HttpResponse
-from django.urls import path
-from django.db import connection
 from django.db.models import Count
+from django.http import HttpResponse
 from django.template.response import TemplateResponse
+from django.urls import reverse, path
+from django.utils.html import format_html
 
 from .forms import UserChangeForm, UserCreationForm
-from .models import User, Article, Feedback, QueryLog, UseCaseFeedback, DataType, TrackArticleView
+from .models import User, Article, Feedback, QueryLog, UseCaseFeedback, TrackArticleView
 from .articles import get_content_files
 
 class PortmapAdminSite(admin.AdminSite):
@@ -38,12 +38,11 @@ class ArticleAdmin(admin.ModelAdmin):
             _view_count=Count("trackarticleview", distinct=True),
         )
         return queryset
-    
+
     def view_count(self, obj):
         return obj._view_count
-    
-    view_count.admin_order_field = '_view_count'
 
+    view_count.admin_order_field = '_view_count'
 
     def get_urls(self):
         urls = super().get_urls()
@@ -57,7 +56,22 @@ class ArticleAdmin(admin.ModelAdmin):
 
 @register(Feedback, site=admin_site)
 class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ("id", "article", "created_at", "reaction", "explanation")
+    readonly_fields = ("article_title", "article_link")
+    list_display = ("id", "article", "article_title", "created_at", "reaction", "explanation")
+    fieldsets = (
+        ('', {
+            'fields': (("article", "article_link"),
+                       ("reaction", ),
+                       ("explanation",))
+        }),
+    )
+
+    def article_title(self, obj):
+        return obj.article.title
+
+    def article_link(self, obj):
+        url = reverse(f"admin:core_article_change", args=(obj.article.pk,))
+        return format_html(f"<a href='{url}''>{obj.article.title}</a>")
 
 
 @register(QueryLog, site=admin_site)
@@ -130,5 +144,3 @@ def analytics(request):
         datatype_interest_counts[view.article.datatype]['views'] += 1
 
     return TemplateResponse(request, "admin/analytics.html", {'stats': json.dumps({'datatypeInterest': datatype_interest_counts, 'providerQueriesByDatatype': datatype_provider_query_counts})})
-
-
