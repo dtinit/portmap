@@ -17,6 +17,21 @@
 <canvas id="datatype-destinations" width="800"></canvas>
 <br >
 <canvas id="datatype-transitions" width="800"></canvas>
+<br >
+<h1>Sentiment by article</h1>
+<div id="datatype-sentiment" width="800">
+    <table>
+        {% for article in article_sentiment %}
+            <tr>
+                <td><a href="/articles/{{ article.name }}">
+                {{ article.title }}</a></td>
+                <td>{% for i in article.sad_count %}❌{% endfor %}
+                <br/>{% for i in article.happy_count %}✅{% endfor %}</td>
+            </tr>
+        {%  endfor %}
+    </table>
+</div>
+
 <script>
     window.stats = JSON.parse('{{ stats | safe }}');
 </script>
