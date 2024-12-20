@@ -1,10 +1,11 @@
 import json
+import textwrap
 
 from django.contrib import admin
 from django.contrib.admin.decorators import register
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from django.urls import reverse, path
@@ -143,4 +144,18 @@ def analytics(request):
     for view in TrackArticleView.objects.select_related("article").all():
         datatype_interest_counts[view.article.datatype]['views'] += 1
 
-    return TemplateResponse(request, "admin/analytics.html", {'stats': json.dumps({'datatypeInterest': datatype_interest_counts, 'providerQueriesByDatatype': datatype_provider_query_counts})})
+
+    sentiment_query = Article.objects.annotate(happy_count=Count("feedback", filter=Q(feedback__reaction='happy')),
+                                               sad_count = Count("feedback", filter=Q(feedback__reaction='sad')))
+    article_sentiment = [{'name': article.name,
+                          'title': textwrap.shorten(article.title, width=50),
+                          'happy_count': range(article.happy_count),
+                          'sad_count': range(article.sad_count)} for article in sentiment_query.order_by('-sad_count')]
+
+
+    stats = json.dumps({
+        'datatypeInterest': datatype_interest_counts,
+        'providerQueriesByDatatype': datatype_provider_query_counts
+    })
+
+    return TemplateResponse(request, "admin/analytics.html", {'stats': stats, 'article_sentiment': article_sentiment})
