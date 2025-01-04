@@ -35,6 +35,8 @@ datatype_icon_map = {
     'Text Social Media': 'message-square-heart',
     'Videos': 'video',
     'Viewing History': 'tv-minimal-play',
+    'Blog': 'message-square-more',
+    'Likes or Favorites': 'thumbs-up',
     'FALLBACK': 'file'
 }
 
