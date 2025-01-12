@@ -33,9 +33,17 @@ def get_content_files():
         for datatype_name in gh.get_datatype_help():
             helpText = datatype_help.get(datatype_name)
             DataType.objects.update_or_create(name=datatype_name, helpText=helpText)
+        
         article_data = {}
+        seen_articles = set()
         for article_item in gh.get_article_list():
-            article_data[article_item['name']] = gh.get_article(article_item['name'])
+            article_name = article_item['name']
+            if article_name in seen_articles:
+                logging.info(f"Duplicate article found: {article_name}")
+                continue
+            seen_articles.add(article_name)
+            article_data[article_name] = gh.get_article(article_name)
+
     except Exception as e:
         logging.error(f"Error accessing Github API: {e}")
         raise RuntimeError("Failed to access Github API.")
