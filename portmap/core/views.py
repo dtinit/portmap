@@ -1,5 +1,6 @@
 from functools import wraps
 import json
+import bleach
 import markdown2
 import pycmarkgfm
 from allauth.account.views import LoginView as AllAuthLoginView
@@ -14,7 +15,6 @@ from django.template.response import TemplateResponse
 from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
-from django.utils.html import strip_tags
 from django.views.decorators.cache import cache_control
 from django.middleware.csrf import get_token
 from .forms import UpdateAccountForm, QueryIndexForm, ArticleFeedbackForm, UseCaseFeedbackForm
@@ -189,10 +189,11 @@ def find_articles(request):
 def article_feedback(request, article_name):
     form = ArticleFeedbackForm(data=request.POST)
     if form.is_valid():
+        sanitized_explanation = bleach.clean(form.cleaned_data['explanation'], tags=[], attributes={}, strip=True)
         Feedback.objects.create(article=Article.objects.get(name=article_name),
                                 reaction=form.cleaned_data['reaction'],
-                                explanation=strip_tags(form.cleaned_data['explanation']))
-        message = f"*New article feedback for \"{article_name}\"*:\n\nReaction: {form.cleaned_data['reaction']}\n\n{strip_tags(form.cleaned_data['explanation'])}"
+                                explanation=sanitized_explanation
+        message = f"*New article feedback for \"{article_name}\"*:\n\nReaction: {form.cleaned_data['reaction']}\n\n{sanitized_explanation}"
         notify(message)
     referer = request.META.get('HTTP_REFERER', '/')
     return TemplateResponse(request, "core/thankyou.html", {'referer': referer})
@@ -202,9 +203,10 @@ def article_feedback(request, article_name):
 def usecase_feedback(request):
     feedback = UseCaseFeedbackForm(data=request.POST)
     if feedback.is_valid():
-        feedback.instance.explanation = strip_tags(feedback.cleaned_data['explanation'])
+        sanitized_explanation = bleach.clean(feedback.cleaned_data['explanation'], tags=[], attributes={}, strip=True)
+        feedback.instance.explanation = sanitized_explanation
         feedback.save()
-        message = f"*New use case feedback:*\n\n{strip_tags(feedback.cleaned_data['explanation'])}"
+        message = f"*New use case feedback:*\n\n{sanitized_explanation}"
         notify(message)
     referer = request.META.get('HTTP_REFERER', '/')
     return TemplateResponse(request, "core/thankyou.html", {'referer': referer})

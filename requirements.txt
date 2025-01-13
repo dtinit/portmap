@@ -20,3 +20,4 @@ django-environ==0.11.2
 pytest-playwright==0.4.4
 pycmarkgfm==1.2.1
 markdown2==2.4.13
+bleach=6.2.0
