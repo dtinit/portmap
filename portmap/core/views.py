@@ -192,7 +192,7 @@ def article_feedback(request, article_name):
         sanitized_explanation = bleach.clean(form.cleaned_data['explanation'], tags=[], attributes={}, strip=True)
         Feedback.objects.create(article=Article.objects.get(name=article_name),
                                 reaction=form.cleaned_data['reaction'],
-                                explanation=sanitized_explanation
+                                explanation=sanitized_explanation)
         message = f"*New article feedback for \"{article_name}\"*:\n\nReaction: {form.cleaned_data['reaction']}\n\n{sanitized_explanation}"
         notify(message)
     referer = request.META.get('HTTP_REFERER', '/')
