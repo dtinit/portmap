@@ -189,11 +189,14 @@ def find_articles(request):
 def article_feedback(request, article_name):
     form = ArticleFeedbackForm(data=request.POST)
     if form.is_valid():
+        # Sanitize for database storage
         sanitized_explanation = bleach.clean(form.cleaned_data['explanation'], tags=[], attributes={}, strip=True)
         Feedback.objects.create(article=Article.objects.get(name=article_name),
                                 reaction=form.cleaned_data['reaction'],
                                 explanation=sanitized_explanation)
-        message = f"*New article feedback for \"{article_name}\"*:\n\nReaction: {form.cleaned_data['reaction']}\n\n{sanitized_explanation}"
+        # Turn http into hxxp to prevent Slack from unfurling the link
+        safe_for_slack = sanitized_explanation.replace("http://", "hxxp://").replace("https://", "hxxps://")
+        message = f"*New article feedback for \"{article_name}\"*:\n\nReaction: {form.cleaned_data['reaction']}\n\n{safe_for_slack}"
         notify(message)
     referer = request.META.get('HTTP_REFERER', '/')
     return TemplateResponse(request, "core/thankyou.html", {'referer': referer})
@@ -203,10 +206,13 @@ def article_feedback(request, article_name):
 def usecase_feedback(request):
     feedback = UseCaseFeedbackForm(data=request.POST)
     if feedback.is_valid():
+        # Sanitize for database storage
         sanitized_explanation = bleach.clean(feedback.cleaned_data['explanation'], tags=[], attributes={}, strip=True)
         feedback.instance.explanation = sanitized_explanation
         feedback.save()
-        message = f"*New use case feedback:*\n\n{sanitized_explanation}"
+        # Turn http into hxxp to prevent Slack from unfurling the link
+        safe_for_slack = sanitized_explanation.replace("http://", "hxxp://").replace("https://", "hxxps://")
+        message = f"*New use case feedback:*\n\n{safe_for_slack}"
         notify(message)
     referer = request.META.get('HTTP_REFERER', '/')
     return TemplateResponse(request, "core/thankyou.html", {'referer': referer})
