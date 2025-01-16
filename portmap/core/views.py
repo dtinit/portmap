@@ -197,7 +197,7 @@ def break_url(url_text):
     The pattern captures:
         1. Optional protocol (http:// or https://)
         2. Followed by a domain name (including letters, digits, dots, hyphens)
-        3. A period, and ome pf tje listed TLDs
+        3. A period, and one of the listed TLDs
         4. Followed by zero or more non-space characters (e.g., /path)
     """
     pattern = r'((https?:\/\/)?[A-Za-z0-9.-]+\.(?:com|net|org|io|gov|edu)\b\S*)'
