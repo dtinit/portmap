@@ -1,5 +1,7 @@
 from functools import wraps
+import re
 import json
+import bleach
 import markdown2
 import pycmarkgfm
 from allauth.account.views import LoginView as AllAuthLoginView
@@ -183,27 +185,63 @@ def find_articles(request):
         form = QueryIndexForm(data=None, datatypes=datatypes)
         return TemplateResponse(request, "core/index.html", {'form': form, 'datatypes': datatypes})
 
+def break_url(url_text):
+    """
+    Break down URLs into segments to avoid linkification
+    and then wrap them in double quotes.
+
+    Examples:
+        "http://example.com" -> "http:// example .com"
+        "example.com"        -> "example .com"
+    
+    The pattern captures:
+        1. Optional protocol (http:// or https://)
+        2. Followed by a domain name (including letters, digits, dots, hyphens)
+        3. A period, and one of the listed TLDs
+        4. Followed by zero or more non-space characters (e.g., /path)
+    """
+    pattern = r'((https?:\/\/)?[A-Za-z0-9.-]+\.(?:com|net|org|io|gov|edu)\b\S*)'
+
+    def replacer(match):
+        original_url = match.group(1)
+        # Insert a space after protocol (if present)
+        spaced_protocol = re.sub(r'(https?:\/\/)', r'\1 ', original_url)
+        # Insert a space before the TLD
+        space_tld = re.sub(r'\.(com|net|org|io|gov|edu)', r' .\1', spaced_protocol)
+        # Wrap result in double quotes
+        return f'"{space_tld}"'
+
+    # Replace all occurences of the pattern with the split/wrapped version
+    return re.sub(pattern, replacer, url_text)
+    
 
 @ux_requires_post
 def article_feedback(request, article_name):
     form = ArticleFeedbackForm(data=request.POST)
-    Feedback.objects.create(article=Article.objects.get(name=article_name),
-                            reaction=form.data['reaction'],
-                            explanation=form.data['explanation'])
-    message = "*New article feedback for \"" + article_name + "\"*:\n\nReaction: " + form.data['reaction'] + "\n\n" + form.data['explanation']
-    notify(message)
+    if form.is_valid():
+        # Sanitize for database storage
+        sanitized_explanation = bleach.clean(form.cleaned_data['explanation'], tags=[], attributes={}, strip=True)
+        Feedback.objects.create(article=Article.objects.get(name=article_name),
+                                reaction=form.cleaned_data['reaction'],
+                                explanation=sanitized_explanation)
+        message = f"*Article feedback for \"{article_name}\"*:\n\nReaction: {form.cleaned_data['reaction']}"
+        notify(message)
     referer = request.META.get('HTTP_REFERER', '/')
     return TemplateResponse(request, "core/thankyou.html", {'referer': referer})
 
 
 @ux_requires_post
 def usecase_feedback(request):
-    feedback = UseCaseFeedbackForm(data=request.POST);
+    feedback = UseCaseFeedbackForm(data=request.POST)
     if feedback.is_valid():
+        # Sanitize for database storage
+        sanitized_explanation = bleach.clean(feedback.cleaned_data['explanation'], tags=[], attributes={}, strip=True)
+        feedback.instance.explanation = sanitized_explanation
         feedback.save()
-        message = "*New use case feedback:*\n\n" + feedback.data['explanation']
+        # Break URLs into segments and wrap in double quotes
+        safe_for_slack = break_url(sanitized_explanation)
+        message = f"*New use case feedback:*\n\n{safe_for_slack}"
         notify(message)
-
     referer = request.META.get('HTTP_REFERER', '/')
     return TemplateResponse(request, "core/thankyou.html", {'referer': referer})
 
