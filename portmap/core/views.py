@@ -149,7 +149,7 @@ def display_article(request, article_name):
 def find_articles(request):
     datatypes = Article.datatypes()
     if request.method == "GET":
-        # create a form instance and populate it with data from the request:
+        # Create a form instance and populate it with data from the request:
         form = QueryIndexForm(data=request.GET, datatypes=datatypes)
 
         if form['datatype']:
@@ -162,22 +162,32 @@ def find_articles(request):
                     'use_case_form': UseCaseFeedbackForm(data=None, datatype='None', source='', destination='')
                 }
                 return TemplateResponse(request, "core/article_list.html", context, headers={'cache-control':'no-store'})
-            datatype_joined = " ".join(form.data['datatype'].split("_"))
-            possible_articles = Article.objects.filter(datatype__contains=datatype_joined,
-                                                       sources__contains=form.data['datasource'],
-                                                       destinations__contains=form.data['datadest'])
 
-            QueryLog.objects.create(datatype=form.data['datatype'],
-                                    source=form.data['datasource'],
-                                    destination=form.data['datadest'])
+            datatype_joined = " ".join(form.data.get('datatype', '').split("_"))
+            datasource = form.data.get('datasource', '')
+            datadest = form.data.get('datadest', '')
+
+            possible_articles = Article.objects.filter(
+                datatype__contains=datatype_joined,
+                sources__contains=datasource,
+                destinations__contains=datadest
+            )
+
+            QueryLog.objects.create(
+                datatype=form.data.get('datatype', ''),
+                source=datasource,
+                destination=datadest
+            )
 
             if possible_articles.count() == 1:
                 return redirect(f"/articles/{possible_articles[0].name}")
             else:
-                use_case_feedback= UseCaseFeedbackForm(data=None,
-                                                       datatype=form.data['datatype'],
-                                                       source=form.data['datasource'],
-                                                       destination=form.data['datadest'])
+                use_case_feedback= UseCaseFeedbackForm(
+                    data=None,
+                    datatype=form.data.get('datatype', ''),
+                    source=datasource,
+                    destination=datadest
+                )
                 context = {'articles': possible_articles, 'use_case_form': use_case_feedback}
                 return TemplateResponse(request, "core/article_list.html", context, headers={'cache-control':'no-store'})
 
