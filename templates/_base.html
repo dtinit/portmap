@@ -10,7 +10,24 @@
 <title>{% block full_title %}{% block title %}{% endblock title %} | {{ PROJECT_NAME }}{% endblock full_title %}</title>
 <meta name="description" content="Find help articles about moving your digital stuff.">
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
+<script src="https://unpkg.com/lucide@latest" async id="lucide-script"></script>
 <script src="{% static 'js/htmx.min.js' %}" defer></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // The lucide script is loaded asynchronously.
+        // If it's already loaded, initialize the icons.
+        if (window.lucide) {
+            window.lucide.createIcons();
+            return;
+        }
+        // Otherwise, wait for it to finish loading and *then* initialize.
+        document.getElementById('lucide-script').addEventListener('load', () => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        });
+    });
+</script>
 {% block header %}{% endblock header %}
 <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
 <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
