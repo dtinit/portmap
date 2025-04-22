@@ -2,9 +2,6 @@
 {% load static %}
 {% load i18n %}
 {% block full_title %}{{ PROJECT_NAME }}{% endblock full_title %}
-{% block header %}
-<script src="https://unpkg.com/lucide@latest"></script>
-{% endblock header %}
 {% block content %}
 
 <section class="page page--wide">
@@ -93,8 +90,4 @@
 <script defer data-domain="portmap.dtinit.org" src="https://plausible.io/js/script.js"></script>
 
 <script src="{% static 'js/query_form.js' %}"></script>
-<script>
- lucide.createIcons();
-</script>
-
 {% endblock content %}
