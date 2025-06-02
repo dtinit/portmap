@@ -103,59 +103,67 @@ def analytics(request):
     datatype_interest_counts = {}
     datatype_provider_query_counts = {}
 
-    for article in Article.objects.all():
-        if article.datatype not in datatype_interest_counts:
-            datatype_interest_counts[article.datatype] = {
-                'views': 0,
-                'queries': 0
-            }
+    for datatype in Article.datatypes().values_list('datatype', flat=True):
+        datatype_interest_counts[datatype] = {
+            'views': 0,
+            'queries': 0
+        }
 
-    for query in QueryLog.objects.all():
-        # Query logs have datatypes stored
-        # with underscores instead of spaces
+    # Process query logs
+    for query in QueryLog.objects.iterator():
         datatype_name = " ".join(query.datatype.split("_"))
         if datatype_name in datatype_interest_counts:
-             datatype_interest_counts[datatype_name]['queries'] += 1
+            datatype_interest_counts[datatype_name]['queries'] += 1
 
-        if datatype_name not in datatype_provider_query_counts:
-            datatype_provider_query_counts[datatype_name] = {
-                'sources': {},
-                'destinations': {},
-                'transitions': {}
-            }
-        if query.source in datatype_provider_query_counts[datatype_name]['sources']:
-            datatype_provider_query_counts[datatype_name]['sources'][query.source] += 1;
-        else:
-            datatype_provider_query_counts[datatype_name]['sources'][query.source] = 1;
+            if datatype_name not in datatype_provider_query_counts:
+                datatype_provider_query_counts[datatype_name] = {
+                    'sources': {},
+                    'destinations': {},
+                    'transitions': {}
+                }
+            
+            sources = datatype_provider_query_counts[datatype_name]['sources']
+            sources[query.source] = sources.get(query.source, 0) + 1
 
-        destination = query.destination if query.destination else 'None selected'
-        if destination in datatype_provider_query_counts[datatype_name]['destinations']:
-            datatype_provider_query_counts[datatype_name]['destinations'][destination] += 1;
-        else:
-            datatype_provider_query_counts[datatype_name]['destinations'][destination] = 1;
+            # Update destination counts
+            destination = query.destination if query.destination else 'None selected'
+            destinations = datatype_provider_query_counts[datatype_name]['destinations']
+            destinations[destination] = destinations.get(destination, 0) + 1
 
-        transition = query.source + ' -> ' + destination
+            # Update transition counts
+            transition = f"{query.source} -> {destination}"
+            transitions = datatype_provider_query_counts[datatype_name]['transitions']
+            transitions[transition] = transitions.get(transition, 0) + 1
 
-        if transition in datatype_provider_query_counts[datatype_name]['transitions']:
-            datatype_provider_query_counts[datatype_name]['transitions'][transition] += 1
-        else:
-            datatype_provider_query_counts[datatype_name]['transitions'][transition] = 1
+    # Count views using database aggregation
+    view_counts = (TrackArticleView.objects
+                  .values('article__datatype')
+                  .annotate(total=Count('id')))
+    
+    for vc in view_counts:
+        datatype = vc['article__datatype']
+        if datatype in datatype_interest_counts:
+            datatype_interest_counts[datatype]['views'] = vc['total']
 
-    for view in TrackArticleView.objects.select_related("article").all():
-        datatype_interest_counts[view.article.datatype]['views'] += 1
+    sentiment_query = (Article.objects
+                      .values('name', 'title')
+                      .annotate(
+                          happy_count=Count('feedback', filter=Q(feedback__reaction='happy')),
+                          sad_count=Count('feedback', filter=Q(feedback__reaction='sad'))
+                      )
+                      .order_by('-sad_count'))
 
-
-    sentiment_query = Article.objects.annotate(happy_count=Count("feedback", filter=Q(feedback__reaction='happy')),
-                                               sad_count = Count("feedback", filter=Q(feedback__reaction='sad')))
-    article_sentiment = [{'name': article.name,
-                          'title': textwrap.shorten(article.title, width=50),
-                          'happy_count': range(article.happy_count),
-                          'sad_count': range(article.sad_count)} for article in sentiment_query.order_by('-sad_count')]
-
+    article_sentiment = [{
+        'name': article['name'],
+        'title': textwrap.shorten(article['title'], width=50),
+        'happy_count': range(article['happy_count']),
+        'sad_count': range(article['sad_count'])
+    } for article in sentiment_query]
 
     stats = json.dumps({
         'datatypeInterest': datatype_interest_counts,
         'providerQueriesByDatatype': datatype_provider_query_counts
     })
 
-    return TemplateResponse(request, "admin/analytics.html", {'stats': stats, 'article_sentiment': article_sentiment})
+    return TemplateResponse(request, "admin/analytics.html", 
+                          {'stats': stats, 'article_sentiment': article_sentiment})
