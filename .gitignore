@@ -167,3 +167,6 @@ node_modules/
 
 # Ignore DSStore from MAC
 .DS_Store
+
+# Ignore static views
+staticviews/

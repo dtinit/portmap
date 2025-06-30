@@ -6,9 +6,8 @@
 <section class="page page--wide">
     {% include "includes/nav-bar.html" with route="articles" %}
     {% include "includes/messages.html" %}
-    <table>
-   <tr>
-       <th>{% if title %}{{title}}{% else %}Articles{% endif %}</th>
+    <table><tr>
+       <th>{% if title %}{{title}}{% else %}Articles{% endif %}<a href="/rss"><i data-lucide="rss"></i></a></th>
    </tr>
    {% for item in articles %}
        <tr>

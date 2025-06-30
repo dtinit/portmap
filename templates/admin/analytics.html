@@ -1,0 +1,38 @@
+{% load static %} {% block header %}
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"
+    integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+></script>
+<link rel="stylesheet" href="{% static 'css/admin/analytics.css' %}" />
+{% endblock header %}
+
+<h1>Datatype interest</h1>
+<canvas id="queried-datatypes" width="800"></canvas>
+<h1>Queried source and destinations by datatype</h1>
+<ul id="src-dest-tab-list" class="tab-list"></ul>
+<canvas id="datatype-sources" width="800"></canvas>
+<br >
+<canvas id="datatype-destinations" width="800"></canvas>
+<br >
+<canvas id="datatype-transitions" width="800"></canvas>
+<br >
+<h1>Sentiment by article</h1>
+<div id="datatype-sentiment" width="800">
+    <table>
+        {% for article in article_sentiment %}
+            <tr>
+                <td><a href="/articles/{{ article.name }}">
+                {{ article.title }}</a></td>
+                <td>{% for i in article.sad_count %}❌{% endfor %}
+                <br/>{% for i in article.happy_count %}✅{% endfor %}</td>
+            </tr>
+        {%  endfor %}
+    </table>
+</div>
+
+<script>
+    window.stats = JSON.parse('{{ stats | safe }}');
+</script>
+<script src="{% static 'js/admin/analytics.js' %}"></script>

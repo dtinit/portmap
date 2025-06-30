@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "django.contrib.flatpages",
+    "django.contrib.syndication",
     "django.forms",
     "django_extensions",
     "allauth",
@@ -336,3 +337,5 @@ GITHUB_PRIVATE_KEY_PEM_FILE = env.str("GITHUB_PRIVATE_KEY_PEM_FILE", None)
 GITHUB_PRIVATE_KEY_PEM_FILE_CONTENTS = env.str("GITHUB_PRIVATE_KEY_PEM_FILE", None)
 GITHUB_APP_ID = 425789
 SLACK_NOTIFICATION_WEBHOOK_URL=env.str("SLACK_NOTIFICATION_WEBHOOK_URL", None)
+# Where prerendered views are stored
+STATIC_VIEW_DIR = 'staticviews'

@@ -19,8 +19,10 @@ urlpatterns = [
     path('usecase_feedback', views.usecase_feedback, name='usecase_feedback'),
     path("articles/<article_name>/", views.display_article, name="display_article"),
     path("find_articles", views.find_articles, name="find_articles"),
+    path("rss/", views.RssFeed(), name="latest_articles"),
     # core
     path("about", views.about, name="about"),
+    path("csrf_token", views.csrf_token, name="csrf_token"),
     path("", views.index, name="index"),
 ]
 

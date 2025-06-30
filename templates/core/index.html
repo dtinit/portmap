@@ -2,9 +2,6 @@
 {% load static %}
 {% load i18n %}
 {% block full_title %}{{ PROJECT_NAME }}{% endblock full_title %}
-{% block header %}
-<script src="https://unpkg.com/lucide@latest"></script>
-{% endblock header %}
 {% block content %}
 
 <section class="page page--wide">
@@ -27,7 +24,6 @@
     possible options are listed yet.</p>
 
     <form action="find_articles" id="query_form">
-        {% csrf_token %}
         <div id="datatype_help_grid">
             <div>
                 <p>Select kind of data to see what articles we have:</p>
@@ -70,9 +66,20 @@
         <a href="https://github.com/dtinit/portability-articles">our content repository</a>!</p>
 
     <form method="post" action="usecase_feedback" id="multiple_option_feedback_form">
+        {% if csrf_token %}
         {% csrf_token %}
+        {% endif %}
         {{ use_case_form }}
-        <button class='button' type="submit">{% translate "Give Feedback" %}</button>
+        <button
+            class='button'
+            type="submit"
+            id="usecase_submit_button"
+            {% if not csrf_token %}
+            disabled
+            {% endif %}
+            >
+            {% translate "Give Feedback" %}
+        </button>
     </form>
     </div>
 
@@ -83,8 +90,4 @@
 <script defer data-domain="portmap.dtinit.org" src="https://plausible.io/js/script.js"></script>
 
 <script src="{% static 'js/query_form.js' %}"></script>
-<script>
- lucide.createIcons();
-</script>
-
 {% endblock content %}
