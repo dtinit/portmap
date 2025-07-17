@@ -10,7 +10,9 @@
 <title>{% block full_title %}{% block title %}{% endblock title %} | {{ PROJECT_NAME }}{% endblock full_title %}</title>
 <meta name="description" content="Find help articles about moving your digital stuff.">
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
-<script src="https://unpkg.com/lucide@latest" async id="lucide-script"></script>
+    <link rel="stylesheet" href="{% static 'css/article.css' %}">
+
+    <script src="https://unpkg.com/lucide@latest" async id="lucide-script"></script>
 <script src="{% static 'js/htmx.min.js' %}" defer></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
