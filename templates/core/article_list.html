@@ -1,28 +1,88 @@
 {% extends '_base.html' %}
 {% load static %}
 {% load i18n %}
-{% block full_title %}{{ PROJECT_NAME }}{% endblock full_title %}
+
+
+
 {% block content %}
 <section class="page page--wide">
     {% include "includes/nav-bar.html" with route="articles" %}
     {% include "includes/messages.html" %}
-    <table><tr>
-       <th>{% if title %}{{title}}{% else %}Articles{% endif %}<a href="/rss"><i data-lucide="rss"></i></a></th>
-   </tr>
-   {% for item in articles %}
-       <tr>
-           <td><a href="{{ item.get_absolute_url }}">{{item.title}}</a></td>
-       </tr>
-   {% endfor %}
-</table>
-{% if use_case_form %}
-<hr>
-    <p>If none of these solutions work for you, we'd love to learn why!</p>
-    <form method="post" action="usecase_feedback" id="multiple_option_feedback_form">
-        {% csrf_token %}
-        {{ use_case_form }}
-        <button class="button button-outline" type="submit">{% translate "Give Feedback" %}</button>
-    </form>
-{% endif %}
+
+    <div class="blog-container">
+        <div class="blog-hero">
+            <div class="blog-hero-content">
+                <h1 class="blog-hero-title">
+                    {% if title %}{{ title }}{% else %}{% translate "Tech Articles" %}{% endif %}
+                </h1>
+                <p class="blog-hero-subtitle">
+                    {% translate "Discover guides, tutorials, and insights for your digital life" %}
+                </p>
+                <a href="/rss" class="rss-badge">
+                    <i data-lucide="rss"></i>
+                    {% translate "RSS Feed" %}
+                </a>
+            </div>
+        </div>
+
+        <div class="articles-grid">
+            {% for item in articles %}
+            <article class="article-card">
+                <div class="article-header">
+                    <a href="{{ item.get_absolute_url }}" class="article-title-link">
+                        <h3 class="article-title">{{ item.title }}</h3>
+                    </a>
+                    <span class="datatype-badge">{{ item.datatype }}</span>
+                </div>
+
+                <div class="article-meta">
+                    <div class="source-destination">
+                        <div class="source">
+                            <span class="source-label">{% translate "Source" %}:</span>
+                            <span class="source-text"><b>{{ item.sources|default:"-" }}</b></span>
+                        </div>
+                        <div class="destination">
+                            <span class="destination-label">{% translate "Destination" %}:</span>
+                            <span class="destination-text"><b>{{ item.destinations|default:"-" }}</b></span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            {% empty %}
+            <div class="article-card">
+                <div class="empty-state">
+                    <h3>{% translate "No Articles Available" %}</h3>
+                    <p>{% translate "Check back soon for new articles and guides!" %}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if use_case_form %}
+        <div class="feedback-section">
+            <h3>{% translate "Can't Find What You're Looking For?" %}</h3>
+            <p>{% translate "If none of these solutions work for you, we'd love to learn why!" %}</p>
+            <form method="post" action="usecase_feedback" id="multiple_option_feedback_form" class="feedback-form">
+                {% csrf_token %}
+                {{ use_case_form }}
+                <button class="button button-outline" type="submit">
+                    {% translate "Give Feedback" %}
+                </button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+
+    <table style="display: none;">
+        <tr>
+            <th>{% if title %}{{title}}{% else %}Articles{% endif %}<a href="/rss"><i data-lucide="rss"></i></a></th>
+        </tr>
+        {% for item in articles %}
+        <tr>
+            <td><a href="{{ item.get_absolute_url }}">{{item.title}}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
 </section>
 {% endblock content %}
