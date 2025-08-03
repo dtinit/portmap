@@ -1,0 +1,35 @@
+# Core
+Django
+psycopg2-binary
+
+# Auth
+django-allauth
+python3-openid
+requests-oauthlib
+
+# Dev & testing
+pytest
+pytest-django
+pytest-factoryboy
+pytest-base-url
+factory_boy
+Faker
+autopep8
+snoop
+django-debug-toolbar
+django-extensions
+django-browser-reload
+django-htmx
+django-silk
+django-structlog
+django-environ
+
+# Google integrations
+google-api-core
+google-auth
+google-cloud-secret-manager
+
+# Optional features
+playwright
+markdown2
+python-slugify
