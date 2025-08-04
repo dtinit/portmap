@@ -33,3 +33,4 @@ google-cloud-secret-manager
 playwright
 markdown2
 python-slugify
+pyyaml
