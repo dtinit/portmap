@@ -7,8 +7,9 @@ django-allauth
 python3-openid
 requests-oauthlib
 authlib
+pyjwt
 
-# Dev & testing
+# Dev & Testing
 pytest
 pytest-django
 pytest-factoryboy
@@ -25,14 +26,28 @@ django-silk
 django-structlog
 django-environ
 
-# Google integrations
+# Google Integrations
 google-api-core
 google-auth
 google-cloud-secret-manager
+googleapis-common-protos
+grpc-google-iam-v1
+grpcio
+grpcio-status
+protobuf
+rsa
 
-# Optional features
+# Optional Features
 playwright
 markdown2
 python-slugify
 pyyaml
-pyjwt
+
+argon2-cffi
+argon2-cffi-bindings
+bleach
+gprof2dot
+greenlet
+markdown-it-py
+mdurl
+pycmarkgfm
