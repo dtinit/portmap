@@ -6,6 +6,7 @@ psycopg2-binary
 django-allauth
 python3-openid
 requests-oauthlib
+authlib
 
 # Dev & testing
 pytest
@@ -34,3 +35,4 @@ playwright
 markdown2
 python-slugify
 pyyaml
+pyjwt

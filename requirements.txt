@@ -13,16 +13,22 @@ asgiref==3.9.1
     #   django-structlog
 asttokens==3.0.0
     # via snoop
+authlib==1.6.1
+    # via -r requirements.in
 autopep8==2.3.2
     # via -r requirements.in
 cachetools==5.5.2
     # via google-auth
 certifi==2025.8.3
     # via requests
+cffi==1.17.1
+    # via cryptography
 charset-normalizer==3.4.2
     # via requests
 cheap-repr==0.5.2
     # via snoop
+cryptography==45.0.5
+    # via authlib
 defusedxml==0.7.1
     # via python3-openid
 django==5.2.4
@@ -133,12 +139,16 @@ pyasn1-modules==0.4.2
     # via google-auth
 pycodestyle==2.14.0
     # via autopep8
+pycparser==2.22
+    # via cffi
 pyee==13.0.0
     # via playwright
 pygments==2.19.2
     # via
     #   pytest
     #   snoop
+pyjwt==2.10.1
+    # via -r requirements.in
 pytest==8.4.1
     # via
     #   -r requirements.in
