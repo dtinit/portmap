@@ -1,0 +1,53 @@
+# Core
+Django
+psycopg2-binary
+
+# Auth
+django-allauth
+python3-openid
+requests-oauthlib
+authlib
+pyjwt
+
+# Dev & Testing
+pytest
+pytest-django
+pytest-factoryboy
+pytest-base-url
+factory_boy
+Faker
+autopep8
+snoop
+django-debug-toolbar
+django-extensions
+django-browser-reload
+django-htmx
+django-silk
+django-structlog
+django-environ
+
+# Google Integrations
+google-api-core
+google-auth
+google-cloud-secret-manager
+googleapis-common-protos
+grpc-google-iam-v1
+grpcio
+grpcio-status
+protobuf
+rsa
+
+# Optional Features
+playwright
+markdown2
+python-slugify
+pyyaml
+
+argon2-cffi
+argon2-cffi-bindings
+bleach
+gprof2dot
+greenlet
+markdown-it-py
+mdurl
+pycmarkgfm

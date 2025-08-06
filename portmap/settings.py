@@ -55,6 +55,7 @@ MIDDLEWARE = [
     "django_htmx.middleware.HtmxMiddleware",
     "django.contrib.flatpages.middleware.FlatpageFallbackMiddleware",
     "django_structlog.middlewares.RequestMiddleware",
+    "allauth.account.middleware.AccountMiddleware"
 ]
 
 if DEBUG:
