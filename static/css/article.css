@@ -85,6 +85,9 @@
 
 .source,
 .destination {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: flex-start;
   gap: 8px;
   padding: 10px 16px;
@@ -95,15 +98,17 @@
   color: #4a5568;
   width: 100%;
   min-height: 44px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
 }
 
 .source-text,
 .destination-text {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  hyphens: auto;
+  flex: 1 1 100%;
   line-height: 1.5;
-  flex: 1;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .source::before {
